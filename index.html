@@ -78,19 +78,28 @@ body{
 .view{position:absolute;inset:0;overflow-y:auto;display:none;flex-direction:column;background:transparent}
 .view.active{display:flex}
 
-/* ========== CHAT ========== */
-#chat-msgs{flex:1;overflow-y:auto;padding:6px 10px 4px}
-.msg-row{display:flex;align-items:flex-end;margin-bottom:2px;gap:6px}
-.msg-row.me{justify-content:flex-end}
-.msg-row.ai{justify-content:flex-start}
-.msg-av{width:38px;height:38px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:18px;background:var(--surface);overflow:hidden}
-.msg-av img{width:100%;height:100%;object-fit:cover}
-.msg-bubble{max-width:78%;padding:5px 13px;font-size:14px;line-height:1.35;word-break:break-word;white-space:pre-wrap;animation:msgIn .35s cubic-bezier(.2,.8,.2,1);position:relative;-webkit-backdrop-filter:blur(30px);backdrop-filter:blur(30px)}
+/* ========== CHAT - Message Card Layout ========== */
+#chat-msgs{flex:1;overflow-y:auto;padding:10px 10px 4px;display:flex;flex-direction:column}
+.msg-card{display:flex;flex-direction:column;margin-bottom:14px;animation:msgIn .35s cubic-bezier(.2,.8,.2,1);max-width:88%}
+.msg-card.me{align-self:flex-end;align-items:flex-end}
+.msg-card.ai{align-self:flex-start;align-items:flex-start}
+
+.msg-card-head{display:flex;align-items:center;gap:8px;margin-bottom:3px}
+.msg-card.me .msg-card-head{flex-direction:row-reverse}
+.msg-card-av{width:34px;height:34px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:16px;background:var(--surface);overflow:hidden;box-shadow:0 2px 8px var(--shadow)}
+.msg-card-av img{width:100%;height:100%;object-fit:cover}
+.msg-card-meta{display:flex;flex-direction:column;gap:1px}
+.msg-card.me .msg-card-meta{align-items:flex-end}
+.msg-card.ai .msg-card-meta{align-items:flex-start}
+.msg-card-name{font-size:11px;font-weight:600;color:var(--text);opacity:.85}
+.msg-card-time{font-size:10px;color:var(--text3)}
+
+.msg-card-body{width:100%}
+.msg-card.me .msg-card-body{display:flex;justify-content:flex-end}
+.msg-bubble{display:inline-block;max-width:100%;padding:5px 13px;font-size:14px;line-height:1.35;word-break:break-word;white-space:pre-wrap;position:relative;-webkit-backdrop-filter:blur(30px);backdrop-filter:blur(30px)}
 .msg-bubble::after{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(180deg,rgba(255,255,255,0.18) 0%,rgba(255,255,255,0) 60%);z-index:1}
-.msg-row.me .msg-bubble{background:var(--bubble-u);color:var(--text);border-radius:32px 32px 6px 32px;border:1px solid var(--bubble-u-border,var(--border));box-shadow:0 4px 24px rgba(0,0,0,0.05),0 1px 3px rgba(0,0,0,0.04)}
-.msg-row.ai .msg-bubble{background:var(--bubble-a);color:var(--bubble-a-text);border-radius:32px 32px 32px 6px;border:1px solid rgba(255,255,255,0.3);box-shadow:0 4px 24px rgba(0,0,0,0.05),0 1px 3px rgba(0,0,0,0.04)}
-.msg-time{font-size:10px;opacity:.35;margin-top:2px;display:block}
-.msg-row.me .msg-time{text-align:right}
+.msg-card.me .msg-bubble{background:var(--bubble-u);color:var(--text);border-radius:32px 32px 6px 32px;border:1px solid var(--bubble-u-border,var(--border));box-shadow:0 4px 24px rgba(0,0,0,0.05),0 1px 3px rgba(0,0,0,0.04)}
+.msg-card.ai .msg-bubble{background:var(--bubble-a);color:var(--bubble-a-text);border-radius:32px 32px 32px 6px;border:1px solid rgba(255,255,255,0.3);box-shadow:0 4px 24px rgba(0,0,0,0.05),0 1px 3px rgba(0,0,0,0.04)}
 .msg-bubble mark{background:rgba(255,200,60,.4);color:inherit;border-radius:2px;padding:0 1px}
 
 #ctx-menu{position:fixed;z-index:250;background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:4px 0;display:none;min-width:120px;box-shadow:0 8px 32px var(--shadow);overflow:hidden}
@@ -424,7 +433,7 @@ var App = {
   doSearch:function(){var q=document.getElementById('search-input').value.trim().toLowerCase(),msgs=document.getElementById('chat-msgs');msgs.innerHTML='';if(!q){this.loadHistory();return}var s=this,found=0;for(var i=0;i<s.history.length;i++){var m=s.history[i];if(m.content.toLowerCase().indexOf(q)===-1)continue;s.renderMsg(m.role==='user'?'me':'ai',s.highlight(m.content,q),true,i);found++}if(!found)msgs.innerHTML='<div style="text-align:center;padding:40px;color:var(--text3)">没有找到</div>'},
   highlight:function(text,q){if(!q)return text;var re=new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi');return text.replace(re,'<mark>$1</mark>')},
 
-  renderMsg:function(role,text,skipSave,msgIdx){var s=this,row=document.createElement('div');row.className='msg-row '+role;row.setAttribute('data-idx',msgIdx!=null?msgIdx:'');var av=document.createElement('div');av.className='msg-av';s.setAvEl(av,role==='me'?s.avMe:s.avAi);var bubble=document.createElement('div');bubble.className='msg-bubble';var body=document.createElement('span');body.innerHTML=text;bubble.appendChild(body);var tm=document.createElement('span');tm.className='msg-time';tm.textContent=s.fmtTime();bubble.appendChild(tm);bubble.addEventListener('dblclick',function(){var txt=(this.textContent||'').replace(s.fmtTime(),'').trim();navigator.clipboard&&navigator.clipboard.writeText(txt).then(function(){s.toast('已复制')}).catch(function(){})});bubble.addEventListener('contextmenu',function(e){e.preventDefault();s.showCtx(e,msgIdx)});var holdTimer;bubble.addEventListener('touchstart',function(e){holdTimer=setTimeout(function(){s.showCtx(e,msgIdx)},500)});bubble.addEventListener('touchend',function(){clearTimeout(holdTimer)});bubble.addEventListener('touchmove',function(){clearTimeout(holdTimer)});if(role==='me'){row.appendChild(bubble);row.appendChild(av)}else{row.appendChild(av);row.appendChild(bubble)}document.getElementById('chat-msgs').appendChild(row);if(!s.userScrolledUp)s.scrollDown();if(!skipSave)s.saveHistory();return body},
+  renderMsg:function(role,text,skipSave,msgIdx){var s=this,card=document.createElement('div');card.className='msg-card '+role;card.setAttribute('data-idx',msgIdx!=null?msgIdx:'');var head=document.createElement('div');head.className='msg-card-head';var av=document.createElement('div');av.className='msg-card-av';s.setAvEl(av,role==='me'?s.avMe:s.avAi);var meta=document.createElement('div');meta.className='msg-card-meta';var nm=document.createElement('span');nm.className='msg-card-name';nm.textContent=role==='me'?'我':s.aiName;var tm=document.createElement('span');tm.className='msg-card-time';tm.textContent=s.fmtTime();meta.appendChild(nm);meta.appendChild(tm);head.appendChild(av);head.appendChild(meta);card.appendChild(head);var bw=document.createElement('div');bw.className='msg-card-body';var bubble=document.createElement('div');bubble.className='msg-bubble';var body=document.createElement('span');body.innerHTML=text;bubble.appendChild(body);bubble.addEventListener('dblclick',function(){var t=(this.textContent||'').replace(s.fmtTime(),'').trim();navigator.clipboard&&navigator.clipboard.writeText(t).then(function(){s.toast('已复制')}).catch(function(){})});bubble.addEventListener('contextmenu',function(e){e.preventDefault();s.showCtx(e,msgIdx)});var ht;bubble.addEventListener('touchstart',function(e){ht=setTimeout(function(){s.showCtx(e,msgIdx)},500)});bubble.addEventListener('touchend',function(){clearTimeout(ht)});bubble.addEventListener('touchmove',function(){clearTimeout(ht)});bw.appendChild(bubble);card.appendChild(bw);document.getElementById('chat-msgs').appendChild(card);if(!s.userScrolledUp)s.scrollDown();if(!skipSave)s.saveHistory();return body},
   showCtx:function(e,msgIdx){if(msgIdx==null)return;this.ctxTarget=msgIdx;var menu=document.getElementById('ctx-menu'),s=this,isFav=s.favorites.some(function(f){return f.msgIdx===msgIdx});menu.innerHTML='<button onclick="App.copyMsg('+msgIdx+')">📋 复制</button><button onclick="App.toggleFavorite('+msgIdx+')">'+(isFav?'💔 取消收藏':'⭐ 收藏')+'</button><button class="danger" onclick="App.deleteMsg('+msgIdx+')">🗑 删除</button>';menu.style.display='block';var x=e.touches?e.touches[0].clientX:e.clientX,y=e.touches?e.touches[0].clientY:e.clientY;menu.style.left=Math.min(x,window.innerWidth-140)+'px';menu.style.top=Math.min(y,window.innerHeight-140)+'px'},
   hideCtx:function(){document.getElementById('ctx-menu').style.display='none';this.ctxTarget=null},
   copyMsg:function(idx){var m=this.history[idx];if(!m)return;navigator.clipboard&&navigator.clipboard.writeText(m.content).catch(function(){});this.toast('已复制');this.hideCtx()},
