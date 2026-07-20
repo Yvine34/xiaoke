@@ -551,13 +551,15 @@ var App = {
 
   // ===== THEME SYSTEM =====
   applyTheme:function(){
-    var t=this.THEMES[this.theme]||this.THEMES['默认黑夜'];
-    var root=document.documentElement.style;
-    root.setProperty('--bg',t.bg);root.setProperty('--surface',t.surface);root.setProperty('--surface2',t.surface2);
-    root.setProperty('--text',t.text);root.setProperty('--text2',t.text2);root.setProperty('--text3',t.text3);
-    root.setProperty('--accent',t.accent);root.setProperty('--bubble-u',t.bubbleU);
-    root.setProperty('--bubble-a',t.bubbleA);root.setProperty('--bubble-a-text',t.bubbleAText);
-    root.setProperty('--border',t.border);root.setProperty('--nav-border',t.navBorder);
+    try{
+      var t=this.THEMES[this.theme]||this.THEMES['默认黑夜'];
+      var r=document.documentElement.style;
+      r.setProperty('--bg','#ff0000'); // TEST
+      r.setProperty('--surface',t.surface);r.setProperty('--surface2',t.surface2);
+      r.setProperty('--text',t.text);r.setProperty('--text2',t.text2);r.setProperty('--text3',t.text3);
+      r.setProperty('--accent',t.accent);r.setProperty('--bubble-u',t.bubbleU);r.setProperty('--bubble-a',t.bubbleA);
+      r.setProperty('--bubble-a-text',t.bubbleAText);r.setProperty('--border',t.border);r.setProperty('--nav-border',t.navBorder);
+    }catch(e){}
   },
   buildThemeGrid:function(){
     var s=this,grid=document.getElementById('theme-grid'),names=Object.keys(s.THEMES);grid.innerHTML='';
@@ -565,7 +567,7 @@ var App = {
       var c=s.THEMES[t].accent,card=document.createElement('div');
       card.className='theme-card'+(t===s.theme?' on':'');
       card.innerHTML='<div class="t-dot" style="background:'+c+'"></div><div class="t-name">'+t+'</div>';
-      card.onclick=function(){s.theme=t;try{localStorage.setItem('xk_theme',t)}catch(e){};s.applyTheme();s.buildThemeGrid()};
+      card.onclick=function(){s.theme=t;try{localStorage.setItem('xk_theme',t)}catch(e){};s.applyTheme();s.buildThemeGrid();s.toast('主题：'+t)};
       grid.appendChild(card);
     });
   }
