@@ -97,7 +97,15 @@ async function unlock() {
     document.getElementById('lock').style.display = 'none';
     document.getElementById('chat').style.display = 'flex';
     document.getElementById('inp').focus();
-    addMsg('a', '门开了。');
+    // Restore history from localStorage
+    try {
+      const saved = JSON.parse(localStorage.getItem('xk_history') || '[]');
+      history = saved;
+      for (const m of saved) {
+        addMsg(m.role === 'user' ? 'u' : 'a', m.content, true);
+      }
+    } catch(e) {}
+    if (!history.length) addMsg('a', '门开了。');
   } catch(e) {
     document.getElementById('err').style.display = 'block';
   }
@@ -114,7 +122,11 @@ const sndBtn = document.getElementById('snd');
 inp.addEventListener('input', () => { inp.style.height = 'auto'; inp.style.height = Math.min(inp.scrollHeight, 100) + 'px'; });
 inp.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } });
 
-function addMsg(role, text) {
+function saveHistory() {
+  try { localStorage.setItem('xk_history', JSON.stringify(history.slice(-30))); } catch(e) {}
+}
+
+function addMsg(role, text, skipSave) {
   const d = document.createElement('div');
   d.className = 'msg ' + (role === 'user' ? 'u' : 'a');
   d.textContent = text;
@@ -123,6 +135,7 @@ function addMsg(role, text) {
   d.appendChild(t);
   msgs.appendChild(d);
   msgs.scrollTop = msgs.scrollHeight;
+  if (!skipSave) saveHistory();
   return d;
 }
 
