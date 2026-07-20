@@ -10,7 +10,7 @@
   --bg:#eef3f8;--bg-gradient:linear-gradient(180deg,#dcefff,#f6fbff);
   --surface:rgba(255,255,255,0.75);--surface2:rgba(255,255,255,0.9);
   --text:#1a1c20;--text2:#6b7a8a;--text3:#a0acb8;
-  --accent:#84b8ff;--bubble-u:var(--accent);--bubble-a:#e8ecf0;--bubble-a-text:#2a2e35;
+  --accent:#84b8ff;--bubble-u:rgba(173,216,230,0.25);--bubble-u-border:rgba(173,216,230,0.4);--bubble-a:rgba(255,255,255,0.55);--bubble-a-text:#2a2e35;
   --border:rgba(0,0,0,0.08);--nav-border:rgba(0,0,0,0.06);
   --btn-text:#fff;--shadow:rgba(0,0,0,0.06);
   --glass-blur:blur(20px);--radius:20px;--safe-b:env(safe-area-inset-bottom,8px);
@@ -85,10 +85,10 @@ body{
 .msg-row.ai{justify-content:flex-start}
 .msg-av{width:26px;height:26px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;background:var(--surface);overflow:hidden}
 .msg-av img{width:100%;height:100%;object-fit:cover}
-.msg-bubble{max-width:75%;padding:8px 12px;border-radius:var(--radius);font-size:15px;line-height:1.5;word-break:break-word;white-space:pre-wrap;animation:msgIn .3s ease;position:relative}
-.msg-row.me .msg-bubble{background:var(--bubble-u);color:#fff;border-bottom-right-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.08)}
-.msg-row.ai .msg-bubble{background:var(--bubble-a);color:var(--bubble-a-text);border-bottom-left-radius:4px;box-shadow:0 1px 4px var(--shadow)}
-.msg-time{font-size:10px;opacity:.4;margin-top:2px;display:block}
+.msg-bubble{max-width:75%;padding:10px 14px;font-size:15px;line-height:1.5;word-break:break-word;white-space:pre-wrap;animation:msgIn .35s cubic-bezier(.2,.8,.2,1);position:relative;-webkit-backdrop-filter:blur(25px);backdrop-filter:blur(25px)}
+.msg-row.me .msg-bubble{background:var(--bubble-u);color:var(--text);border-radius:28px 28px 10px 28px;border:1px solid var(--bubble-u-border,var(--border));box-shadow:0 8px 32px rgba(0,0,0,0.06)}
+.msg-row.ai .msg-bubble{background:var(--bubble-a);color:var(--bubble-a-text);border-radius:28px 28px 28px 10px;border:1px solid rgba(255,255,255,0.35);box-shadow:0 8px 32px rgba(0,0,0,0.06)}
+.msg-time{font-size:10px;opacity:.35;margin-top:3px;display:block}
 .msg-row.me .msg-time{text-align:right}
 .msg-bubble mark{background:rgba(255,200,60,.4);color:inherit;border-radius:2px;padding:0 1px}
 
@@ -97,14 +97,14 @@ body{
 #ctx-menu button:active{background:var(--surface)}
 #ctx-menu button.danger{color:#e06060}
 
-#input-bar{display:flex;gap:8px;align-items:flex-end;padding:8px 10px calc(8px + var(--safe-b));flex-shrink:0;background:transparent}
-#input-bar .wrap{flex:1;display:flex;align-items:flex-end;background:var(--surface);border:1px solid var(--border);border-radius:22px;padding:5px 6px 5px 16px;box-shadow:0 1px 6px var(--shadow)}
-#input-bar .wrap:focus-within{border-color:var(--accent);box-shadow:0 1px 12px var(--shadow)}
-#input-bar textarea{flex:1;background:0;border:0;color:var(--text);padding:7px 0;font-size:15px;resize:none;outline:none;font-family:inherit;max-height:110px;line-height:1.45;caret-color:var(--accent)}
+#input-bar{display:flex;gap:10px;align-items:center;padding:8px 12px calc(10px + var(--safe-b));flex-shrink:0;background:transparent}
+#input-bar .wrap{flex:1;display:flex;align-items:center;background:rgba(255,255,255,0.55);border:1px solid rgba(255,255,255,0.35);border-radius:28px;min-height:48px;padding:4px 6px 4px 20px;-webkit-backdrop-filter:blur(25px);backdrop-filter:blur(25px);box-shadow:0 8px 32px rgba(0,0,0,0.06)}
+#input-bar .wrap:focus-within{border-color:var(--accent);box-shadow:0 8px 32px rgba(0,0,0,0.1)}
+#input-bar textarea{flex:1;background:0;border:0;color:var(--text);padding:10px 0;font-size:15px;resize:none;outline:none;font-family:inherit;max-height:110px;line-height:1.45;caret-color:var(--accent)}
 #input-bar textarea::placeholder{color:var(--text3)}
-#input-bar button{width:36px;height:36px;border-radius:50%;border:none;background:var(--accent);color:var(--btn-text);font-size:16px;cursor:pointer;flex-shrink:0;font-weight:600;box-shadow:0 2px 8px rgba(0,0,0,0.12)}
-#input-bar button:active{opacity:.8;transform:scale(.93)}
-#input-bar button:disabled{background:var(--surface);color:var(--text3);box-shadow:none}
+#input-bar button{width:40px;height:40px;border-radius:50%;border:none;background:var(--accent);color:var(--btn-text);font-size:17px;cursor:pointer;flex-shrink:0;font-weight:600;box-shadow:0 4px 16px rgba(0,0,0,0.1);transition:transform .2s,opacity .2s}
+#input-bar button:active{opacity:.8;transform:scale(.9)}
+#input-bar button:disabled{background:rgba(255,255,255,0.4);color:var(--text3);box-shadow:none}
 #scroll-btn{position:absolute;bottom:12px;right:14px;width:32px;height:32px;border-radius:50%;background:var(--surface);border:1px solid var(--border);color:var(--accent);font-size:14px;display:none;align-items:center;justify-content:center;cursor:pointer;z-index:5;box-shadow:0 2px 8px var(--shadow)}
 #scroll-btn.show{display:flex}
 .typing{padding:6px 16px;display:flex;gap:4px;align-items:center}
@@ -322,12 +322,12 @@ var App = {
   aiName:'阿恕',aiBio:'如你的心',aiTags:'温柔, 陪伴型, 治愈系',
   theme:'冬日雪景',
   THEMES:{
-    '冬日雪景':{bg:'#eef3f8',bgGradient:'linear-gradient(180deg,#dcefff,#f6fbff)',surface:'rgba(255,255,255,0.75)',surface2:'rgba(255,255,255,0.92)',text:'#1a1c20',text2:'#6b7a8a',text3:'#a0acb8',accent:'#84b8ff',bubbleU:'#84b8ff',bubbleA:'#eef2f7',bubbleAText:'#2a2e35',border:'rgba(0,0,0,0.08)',navBorder:'rgba(0,0,0,0.05)',btnText:'#fff',shadow:'rgba(0,0,0,0.05)',glassBlur:'blur(20px)',isLight:true},
-    '樱花粉':  {bg:'#fdf2f5',bgGradient:'linear-gradient(180deg,#ffe7f1,#fff4f8)',surface:'rgba(255,255,255,0.75)',surface2:'rgba(255,255,255,0.92)',text:'#2a1820',text2:'#8a6878',text3:'#b898a4',accent:'#f59cb7',bubbleU:'#f59cb7',bubbleA:'#fef0f3',bubbleAText:'#3a2028',border:'rgba(0,0,0,0.07)',navBorder:'rgba(0,0,0,0.04)',btnText:'#fff',shadow:'rgba(0,0,0,0.04)',glassBlur:'blur(20px)',isLight:true},
-    '海洋蓝':  {bg:'#eef8fa',bgGradient:'linear-gradient(180deg,#d7f8ff,#effcff)',surface:'rgba(255,255,255,0.75)',surface2:'rgba(255,255,255,0.92)',text:'#142428',text2:'#5a787e',text3:'#90acb0',accent:'#56c4d6',bubbleU:'#56c4d6',bubbleA:'#eaf6f8',bubbleAText:'#1e3034',border:'rgba(0,0,0,0.07)',navBorder:'rgba(0,0,0,0.04)',btnText:'#fff',shadow:'rgba(0,0,0,0.04)',glassBlur:'blur(20px)',isLight:true},
-    '星空紫':  {bg:'#1a1530',bgGradient:'linear-gradient(180deg,#231942,#2d2158)',surface:'rgba(255,255,255,0.1)',surface2:'rgba(255,255,255,0.16)',text:'#e4e0f0',text2:'#9a94b8',text3:'#6a6488',accent:'#b4a0f0',bubbleU:'#b4a0f0',bubbleA:'rgba(255,255,255,0.08)',bubbleAText:'#d8d4e8',border:'rgba(255,255,255,0.1)',navBorder:'rgba(255,255,255,0.06)',btnText:'#1a1530',shadow:'rgba(0,0,0,0.3)',glassBlur:'blur(20px)',isLight:false},
-    '暖阳黄':  {bg:'#fdf8ee',bgGradient:'linear-gradient(180deg,#fff2d8,#fffaf0)',surface:'rgba(255,255,255,0.75)',surface2:'rgba(255,255,255,0.92)',text:'#2a2010',text2:'#8a7860',text3:'#b8a890',accent:'#ffbf47',bubbleU:'#ffbf47',bubbleA:'#fef6e8',bubbleAText:'#3a3020',border:'rgba(0,0,0,0.07)',navBorder:'rgba(0,0,0,0.04)',btnText:'#2a2010',shadow:'rgba(0,0,0,0.04)',glassBlur:'blur(20px)',isLight:true},
-    '默认黑夜':{bg:'#0a0a0a',bgGradient:'#0a0a0a',surface:'rgba(255,255,255,0.06)',surface2:'rgba(255,255,255,0.1)',text:'#e6e3dd',text2:'#888',text3:'#555',accent:'#5b9eff',bubbleU:'#5b9eff',bubbleA:'rgba(255,255,255,0.06)',bubbleAText:'#cfcbc4',border:'rgba(255,255,255,0.08)',navBorder:'rgba(255,255,255,0.05)',btnText:'#fff',shadow:'rgba(0,0,0,0.5)',glassBlur:'blur(10px)',isLight:false}
+    '冬日雪景':{bg:'#eef3f8',bgGradient:'linear-gradient(180deg,#dcefff,#f6fbff)',surface:'rgba(255,255,255,0.7)',surface2:'rgba(255,255,255,0.9)',text:'#1a1c20',text2:'#6b7a8a',text3:'#a0acb8',accent:'#84b8ff',bubbleU:'rgba(173,216,230,0.25)',bubbleUBorder:'rgba(173,216,230,0.4)',bubbleA:'rgba(255,255,255,0.55)',bubbleAText:'#2a2e35',border:'rgba(0,0,0,0.08)',navBorder:'rgba(0,0,0,0.05)',btnText:'#fff',shadow:'rgba(0,0,0,0.04)',glassBlur:'blur(25px)',isLight:true},
+    '樱花粉':  {bg:'#fdf2f5',bgGradient:'linear-gradient(180deg,#ffe7f1,#fff4f8)',surface:'rgba(255,255,255,0.7)',surface2:'rgba(255,255,255,0.9)',text:'#2a1820',text2:'#8a6878',text3:'#b898a4',accent:'#f59cb7',bubbleU:'rgba(255,182,193,0.25)',bubbleUBorder:'rgba(255,182,193,0.4)',bubbleA:'rgba(255,255,255,0.55)',bubbleAText:'#2a2e35',border:'rgba(0,0,0,0.07)',navBorder:'rgba(0,0,0,0.04)',btnText:'#fff',shadow:'rgba(0,0,0,0.04)',glassBlur:'blur(25px)',isLight:true},
+    '海洋蓝':  {bg:'#eef8fa',bgGradient:'linear-gradient(180deg,#d7f8ff,#effcff)',surface:'rgba(255,255,255,0.7)',surface2:'rgba(255,255,255,0.9)',text:'#142428',text2:'#5a787e',text3:'#90acb0',accent:'#56c4d6',bubbleU:'rgba(120,200,255,0.22)',bubbleUBorder:'rgba(120,200,255,0.35)',bubbleA:'rgba(255,255,255,0.55)',bubbleAText:'#2a2e35',border:'rgba(0,0,0,0.07)',navBorder:'rgba(0,0,0,0.04)',btnText:'#fff',shadow:'rgba(0,0,0,0.04)',glassBlur:'blur(25px)',isLight:true},
+    '星空紫':  {bg:'#1a1530',bgGradient:'linear-gradient(180deg,#231942,#2d2158)',surface:'rgba(255,255,255,0.1)',surface2:'rgba(255,255,255,0.16)',text:'#e4e0f0',text2:'#9a94b8',text3:'#6a6488',accent:'#b4a0f0',bubbleU:'rgba(190,160,255,0.22)',bubbleUBorder:'rgba(190,160,255,0.35)',bubbleA:'rgba(255,255,255,0.1)',bubbleAText:'#d8d4e8',border:'rgba(255,255,255,0.1)',navBorder:'rgba(255,255,255,0.06)',btnText:'#1a1530',shadow:'rgba(0,0,0,0.3)',glassBlur:'blur(25px)',isLight:false},
+    '暖阳黄':  {bg:'#fdf8ee',bgGradient:'linear-gradient(180deg,#fff2d8,#fffaf0)',surface:'rgba(255,255,255,0.7)',surface2:'rgba(255,255,255,0.9)',text:'#2a2010',text2:'#8a7860',text3:'#b8a890',accent:'#ffbf47',bubbleU:'rgba(255,220,140,0.25)',bubbleUBorder:'rgba(255,220,140,0.4)',bubbleA:'rgba(255,255,255,0.55)',bubbleAText:'#2a2e35',border:'rgba(0,0,0,0.07)',navBorder:'rgba(0,0,0,0.04)',btnText:'#2a2010',shadow:'rgba(0,0,0,0.04)',glassBlur:'blur(25px)',isLight:true},
+    '默认黑夜':{bg:'#0a0a0a',bgGradient:'#0a0a0a',surface:'rgba(255,255,255,0.06)',surface2:'rgba(255,255,255,0.1)',text:'#e6e3dd',text2:'#888',text3:'#555',accent:'#5b9eff',bubbleU:'rgba(91,158,255,0.18)',bubbleUBorder:'rgba(91,158,255,0.3)',bubbleA:'rgba(255,255,255,0.06)',bubbleAText:'#cfcbc4',border:'rgba(255,255,255,0.08)',navBorder:'rgba(255,255,255,0.05)',btnText:'#fff',shadow:'rgba(0,0,0,0.5)',glassBlur:'blur(15px)',isLight:false}
   },
   EMOJIS:['😊','😎','🥰','😇','🤩','🫶','🐱','🐰','🦊','🐼','🌸','⭐','✨','💫','🌙','☀️','💖','🎀','🍀','🫧'],
   DATES:{firstChat:'2026-07-18',relationship:'2026-07-20'},
@@ -457,7 +457,7 @@ var App = {
     r.setProperty('--bg',t.bg);r.setProperty('--bg-gradient',t.bgGradient);
     r.setProperty('--surface',t.surface);r.setProperty('--surface2',t.surface2);
     r.setProperty('--text',t.text);r.setProperty('--text2',t.text2);r.setProperty('--text3',t.text3);
-    r.setProperty('--accent',t.accent);r.setProperty('--bubble-u',t.bubbleU);
+    r.setProperty('--accent',t.accent);r.setProperty('--bubble-u',t.bubbleU);r.setProperty('--bubble-u-border',t.bubbleUBorder||t.border);
     r.setProperty('--bubble-a',t.bubbleA);r.setProperty('--bubble-a-text',t.bubbleAText);
     r.setProperty('--border',t.border);r.setProperty('--nav-border',t.navBorder);
     r.setProperty('--btn-text',t.btnText);r.setProperty('--shadow',t.shadow);
