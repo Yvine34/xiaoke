@@ -437,7 +437,7 @@ var App = {
     s.SYSTEM=s.bufToStr(await crypto.subtle.decrypt({name:'AES-GCM',iv:iv2,tagLength:128},key,c2));
   },
 
-  unlock:async function(){try{await this.decrypt(document.getElementById('pw-input').value)}catch(e){document.getElementById('lock-err').style.display='block';return}document.getElementById('lock-screen').style.display='none';document.getElementById('main-app').classList.add('show');document.getElementById('search-toggle').style.display='block';document.getElementById('chat-input').focus();this.loadHistory()},
+  unlock:async function(){try{await this.decrypt(document.getElementById('pw-input').value)}catch(e){var el=document.getElementById('lock-err');el.textContent='不对: '+e.message.slice(0,40);el.style.display='block';console.error(e);return}document.getElementById('lock-screen').style.display='none';document.getElementById('main-app').classList.add('show');document.getElementById('search-toggle').style.display='block';document.getElementById('chat-input').focus();this.loadHistory()},
 
   loadHistory:function(){var s=this;try{s.history=JSON.parse(localStorage.getItem('xk_history')||'[]')}catch(e){}document.getElementById('chat-msgs').innerHTML='';for(var i=0;i<s.history.length;i++){var m=s.history[i];s.renderMsg(m.role==='user'?'me':'ai',m.content,true,i)}if(!s.history.length)s.renderMsg('ai','嗯。',true)},
   saveHistory:function(){try{localStorage.setItem('xk_history',JSON.stringify(this.history.slice(-80)))}catch(e){}},
