@@ -342,9 +342,9 @@ function showToast(txt){
 // ===== ADD MESSAGE =====
 function addMsg(role,text,skipSave){
   const row=document.createElement('div');
-  row.className='row '+(role==='user'?'u':'a');
+  row.className='row '+role;
   const d=document.createElement('div');
-  d.className='msg '+(role==='user'?'u':'a');
+  d.className='msg '+role;
   d.textContent=text;
   d.addEventListener('dblclick',()=>{
     navigator.clipboard?.writeText(text).then(()=>showToast('已复制')).catch(()=>{});
