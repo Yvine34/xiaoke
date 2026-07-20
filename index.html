@@ -310,6 +310,8 @@ const ENC = {"salt":"pzRm3EOnaRZW+rfG4i0jpg==","iv":"jEL3CJWH6MrCy9uY","encrypte
 let API_KEY = '';
 let SYSTEM = '';
 let history = [];
+let avMe=localStorage.getItem('xk_av_me')||'😊';
+let avAi=localStorage.getItem('xk_av_ai')||'✦';
 let waiting = false;
 let userScrolledUp = false;
 
@@ -462,8 +464,6 @@ function showToast(txt){
 }
 
 // ===== ADD MESSAGE =====
-let avMe=localStorage.getItem('xk_av_me')||'😊';
-let avAi=localStorage.getItem('xk_av_ai')||'✦';
 function addMsg(role,text,skipSave){
   const row=document.createElement('div');
   row.className='row '+role;
