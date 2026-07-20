@@ -5,20 +5,37 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no,viewport-fit=cover,maximum-scale=1">
 <title>阿恕</title>
 <style>
-/* ========== RESET & VARS ========== */
+/* ========== RESET & CSS VARIABLES ========== */
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
   --bg:#0a0a0a;--surface:#141414;--surface2:#1e1e1e;
   --text:#e6e3dd;--text2:#888;--text3:#555;
-  --accent:#5b9eff;--danger:#e06060;
-  --bubble-u:var(--accent);--bubble-a:#1a1a1a;--bubble-a-text:#cfcbc4;
-  --radius:20px;--safe-b:env(safe-area-inset-bottom,8px);
+  --accent:#5b9eff;--bubble-u:var(--accent);--bubble-a:#1a1a1a;--bubble-a-text:#cfcbc4;
+  --border:#222;--nav-border:#1a1a1a;
+  --btn-text:#fff;--shadow:rgba(0,0,0,.5);
+  --transition-speed:0.3s;
 }
 body{
   font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','PingFang SC','Helvetica Neue',sans-serif;
   background:var(--bg);color:var(--text);height:100dvh;overflow:hidden;
   -webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased;
   user-select:none;-webkit-user-select:none;
+  transition:background-color var(--transition-speed) ease-out,color var(--transition-speed) ease-out;
+}
+
+/* global transition for themed elements */
+#main-app,#lock-screen,#topbar,#bottom-nav,#input-bar,
+.view,.mem-stat,.mem-card,.diary-entry,.fav-item,.ann-item,.stat-item,
+.section .row,.theme-card,.msg-av,.pf-tag,#ctx-menu,#emoji-picker .box,
+#toast,#search-bar input,#lock-screen input,#lock-screen .home-card,
+#input-bar .wrap,#input-bar textarea,.mem-add input,.mem-add select,
+.mem-add button,.diary-add textarea,.diary-add button,.ann-add input,
+.ann-add button,#scroll-btn,.msg-bubble.ai,#lock-screen button,
+#input-bar button,#chat-input,#pw-input{
+  transition:background-color var(--transition-speed) ease-out,
+             color var(--transition-speed) ease-out,
+             border-color var(--transition-speed) ease-out,
+             box-shadow var(--transition-speed) ease-out;
 }
 
 /* ========== LOCK SCREEN ========== */
@@ -29,42 +46,36 @@ body{
 }
 #lock-screen .splash{width:90px;height:90px;border-radius:50%;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:42px;overflow:hidden}
 #lock-screen .splash img{width:100%;height:100%;object-fit:cover}
-#lock-screen h1{font-size:22px;font-weight:400;letter-spacing:1px}
+#lock-screen h1{font-size:22px;font-weight:400;letter-spacing:1px;color:var(--text)}
 #lock-screen .sub{font-size:12px;color:var(--text2)}
 #lock-screen .home-card{background:var(--surface);border-radius:16px;padding:16px 20px;margin-top:8px;text-align:center;max-width:280px;width:100%}
 #lock-screen .home-card .stat-row{display:flex;justify-content:center;gap:24px;margin:8px 0;font-size:12px;color:var(--text2)}
 #lock-screen .home-card .stat-row span strong{color:var(--accent);font-size:16px}
 #lock-screen .home-card .recent-msg{font-size:12px;color:var(--text3);margin-top:6px;font-style:italic}
-#lock-screen input{background:var(--surface);border:1px solid #2a2a2a;border-radius:14px;color:var(--text);padding:12px 18px;font-size:15px;width:100%;max-width:260px;text-align:center;outline:none;font-family:inherit;-webkit-text-security:disc;caret-color:var(--accent)}
+#lock-screen input{background:var(--surface);border:1px solid var(--border);border-radius:14px;color:var(--text);padding:12px 18px;font-size:15px;width:100%;max-width:260px;text-align:center;outline:none;font-family:inherit;-webkit-text-security:disc;caret-color:var(--accent)}
 #lock-screen input:focus{border-color:var(--accent)}
-#lock-screen button{background:var(--accent);color:#fff;border:none;border-radius:24px;padding:11px 48px;font-size:14px;font-weight:500;cursor:pointer;letter-spacing:.5px;transition:opacity .15s}
+#lock-screen button{background:var(--accent);color:var(--btn-text);border:none;border-radius:24px;padding:11px 48px;font-size:14px;font-weight:500;cursor:pointer;letter-spacing:.5px}
 #lock-screen button:active{opacity:.8}
-#lock-screen .err{color:var(--danger);font-size:13px;display:none}
-#lock-screen .ver{font-size:10px;color:#333;position:absolute;bottom:24px}
+#lock-screen .err{color:#e06060;font-size:13px;display:none}
+#lock-screen .ver{font-size:10px;color:var(--text3);position:absolute;bottom:24px}
 
 /* ========== MAIN APP ========== */
-#main-app{display:none;height:100dvh;flex-direction:column;position:relative}
+#main-app{display:none;height:100dvh;flex-direction:column;position:relative;background:var(--bg)}
 #main-app.show{display:flex}
 
-/* topbar */
-#topbar{display:flex;align-items:center;padding:10px 14px 6px;flex-shrink:0;gap:8px}
-#topbar .title{font-size:15px;font-weight:500;flex:1}
+#topbar{display:flex;align-items:center;padding:10px 14px 6px;flex-shrink:0;gap:8px;background:var(--bg)}
+#topbar .title{font-size:15px;font-weight:500;flex:1;color:var(--text)}
 #topbar .top-btn{background:0;border:none;color:var(--text2);font-size:18px;cursor:pointer;padding:4px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:8px}
 #topbar .top-btn:active{background:var(--surface2)}
-#topbar .sub-tabs{display:flex;gap:0}
-#topbar .sub-tabs button{background:0;border:none;color:var(--text3);padding:6px 14px;font-size:13px;cursor:pointer;font-family:inherit;border-bottom:2px solid transparent}
-#topbar .sub-tabs button.on{color:var(--accent);border-bottom-color:var(--accent)}
 
-/* search */
-#search-bar{display:none;padding:4px 14px 8px;flex-shrink:0;animation:fadeIn .2s}
+#search-bar{display:none;padding:4px 14px 8px;flex-shrink:0;animation:fadeIn .2s;background:var(--bg)}
 #search-bar.show{display:flex;gap:8px}
-#search-bar input{flex:1;background:var(--surface);border:1px solid #2a2a2a;border-radius:12px;color:var(--text);padding:8px 14px;font-size:14px;outline:none;font-family:inherit;caret-color:var(--accent)}
+#search-bar input{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:12px;color:var(--text);padding:8px 14px;font-size:14px;outline:none;font-family:inherit;caret-color:var(--accent)}
 #search-bar input:focus{border-color:var(--accent)}
 #search-bar .cancel{background:0;border:none;color:var(--accent);font-size:13px;cursor:pointer}
 
-/* views */
 #views{flex:1;overflow:hidden;position:relative}
-.view{position:absolute;inset:0;overflow-y:auto;display:none;flex-direction:column}
+.view{position:absolute;inset:0;overflow-y:auto;display:none;flex-direction:column;background:var(--bg)}
 .view.active{display:flex}
 
 /* ========== CHAT ========== */
@@ -81,29 +92,27 @@ body{
 .msg-row.me .msg-time{text-align:right}
 .msg-bubble mark{background:rgba(255,200,60,.35);color:inherit;border-radius:2px;padding:0 1px}
 
-/* context menu */
-#ctx-menu{position:fixed;z-index:250;background:var(--surface2);border:1px solid #333;border-radius:12px;padding:4px 0;display:none;min-width:120px;box-shadow:0 8px 24px rgba(0,0,0,.6);overflow:hidden}
+#ctx-menu{position:fixed;z-index:250;background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:4px 0;display:none;min-width:120px;box-shadow:0 8px 24px var(--shadow);overflow:hidden}
 #ctx-menu button{display:block;width:100%;background:0;border:none;color:var(--text);padding:10px 16px;font-size:14px;text-align:left;cursor:pointer;font-family:inherit}
 #ctx-menu button:active{background:var(--surface)}
-#ctx-menu button.danger{color:var(--danger)}
+#ctx-menu button.danger{color:#e06060}
 
-/* input */
 #input-bar{display:flex;gap:8px;align-items:flex-end;padding:8px 10px calc(8px + var(--safe-b));flex-shrink:0;background:var(--bg)}
-#input-bar .wrap{flex:1;display:flex;align-items:flex-end;background:var(--surface);border:1px solid #2a2a2a;border-radius:22px;padding:5px 6px 5px 16px}
+#input-bar .wrap{flex:1;display:flex;align-items:flex-end;background:var(--surface);border:1px solid var(--border);border-radius:22px;padding:5px 6px 5px 16px}
 #input-bar .wrap:focus-within{border-color:var(--accent)}
 #input-bar textarea{flex:1;background:0;border:0;color:var(--text);padding:7px 0;font-size:15px;resize:none;outline:none;font-family:inherit;max-height:110px;line-height:1.45;caret-color:var(--accent)}
-#input-bar textarea::placeholder{color:#444}
-#input-bar button{width:36px;height:36px;border-radius:50%;border:none;background:var(--accent);color:#fff;font-size:16px;cursor:pointer;flex-shrink:0;font-weight:600;transition:opacity .15s}
+#input-bar textarea::placeholder{color:var(--text3)}
+#input-bar button{width:36px;height:36px;border-radius:50%;border:none;background:var(--accent);color:var(--btn-text);font-size:16px;cursor:pointer;flex-shrink:0;font-weight:600}
 #input-bar button:active{opacity:.75}
-#input-bar button:disabled{background:#1a1a1a;color:#333}
-#scroll-btn{position:absolute;bottom:12px;right:14px;width:32px;height:32px;border-radius:50%;background:var(--surface);border:1px solid #333;color:var(--accent);font-size:14px;display:none;align-items:center;justify-content:center;cursor:pointer;z-index:5;box-shadow:0 4px 12px rgba(0,0,0,.5)}
+#input-bar button:disabled{background:var(--surface);color:var(--text3)}
+#scroll-btn{position:absolute;bottom:12px;right:14px;width:32px;height:32px;border-radius:50%;background:var(--surface);border:1px solid var(--border);color:var(--accent);font-size:14px;display:none;align-items:center;justify-content:center;cursor:pointer;z-index:5;box-shadow:0 4px 12px var(--shadow)}
 #scroll-btn.show{display:flex}
 .typing{padding:6px 16px;display:flex;gap:4px;align-items:center}
 .typing span{width:5px;height:5px;border-radius:50%;background:var(--text2);animation:typing 1.4s infinite}
 .typing span:nth-child(2){animation-delay:.2s}.typing span:nth-child(3){animation-delay:.4s}
 .typing-txt{font-size:11px;color:var(--text2);margin-left:4px}
 
-/* ========== MEMORY VIEW ========== */
+/* ========== MEMORY ========== */
 .mem-stats{display:flex;gap:6px;padding:10px 12px}
 .mem-stat{flex:1;background:var(--surface);border-radius:12px;padding:12px 10px;text-align:center}
 .mem-stat .num{font-size:26px;font-weight:500;color:var(--accent)}
@@ -112,35 +121,35 @@ body{
 .mem-section h3{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
 .mem-card{background:var(--surface);border-radius:12px;padding:10px 12px;margin-bottom:4px;display:flex;align-items:center;gap:8px}
 .mem-card .mem-icon{font-size:16px;flex-shrink:0}
-.mem-card .mem-text{flex:1;font-size:13px}
+.mem-card .mem-text{flex:1;font-size:13px;color:var(--text)}
 .mem-card .mem-date{font-size:10px;color:var(--text3);flex-shrink:0}
 .mem-card .mem-del{background:0;border:none;color:var(--text3);cursor:pointer;padding:4px;font-size:14px}
-.mem-card .mem-del:active{color:var(--danger)}
+.mem-card .mem-del:active{color:#e06060}
 .mem-add{display:flex;gap:6px;padding:0 12px 14px}
-.mem-add input{flex:1;background:var(--surface);border:1px solid #2a2a2a;border-radius:12px;color:var(--text);padding:8px 12px;font-size:12px;outline:none;font-family:inherit}
+.mem-add input{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:12px;color:var(--text);padding:8px 12px;font-size:12px;outline:none;font-family:inherit}
 .mem-add input:focus{border-color:var(--accent)}
-.mem-add button{background:var(--accent);color:#fff;border:none;border-radius:12px;padding:8px 14px;font-size:12px;cursor:pointer;white-space:nowrap}
-.mem-add select{background:var(--surface);border:1px solid #2a2a2a;border-radius:12px;color:var(--text);padding:8px;font-size:12px;outline:none;font-family:inherit}
+.mem-add button{background:var(--accent);color:var(--btn-text);border:none;border-radius:12px;padding:8px 14px;font-size:12px;cursor:pointer;white-space:nowrap}
+.mem-add select{background:var(--surface);border:1px solid var(--border);border-radius:12px;color:var(--text);padding:8px;font-size:12px;outline:none;font-family:inherit}
 
-/* ========== DIARY VIEW ========== */
+/* ========== DIARY ========== */
 .diary-entry{background:var(--surface);border-radius:14px;padding:14px 16px;margin:6px 12px}
 .diary-entry .d-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
 .diary-entry .d-date{font-size:13px;font-weight:500;color:var(--accent)}
 .diary-entry .d-mood{font-size:20px}
 .diary-entry .d-content{font-size:14px;line-height:1.6;color:var(--text2)}
 .diary-add{display:flex;gap:6px;padding:0 12px 14px}
-.diary-add textarea{flex:1;background:var(--surface);border:1px solid #2a2a2a;border-radius:12px;color:var(--text);padding:8px 12px;font-size:12px;outline:none;font-family:inherit;resize:none;height:60px}
+.diary-add textarea{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:12px;color:var(--text);padding:8px 12px;font-size:12px;outline:none;font-family:inherit;resize:none;height:60px}
 .diary-add textarea:focus{border-color:var(--accent)}
-.diary-add button{background:var(--accent);color:#fff;border:none;border-radius:12px;padding:8px 14px;font-size:12px;cursor:pointer;white-space:nowrap;align-self:flex-end}
+.diary-add button{background:var(--accent);color:var(--btn-text);border:none;border-radius:12px;padding:8px 14px;font-size:12px;cursor:pointer;white-space:nowrap;align-self:flex-end}
 
 /* ========== FAVORITES ========== */
 #fav-view{padding:6px 10px}
 .fav-item{background:var(--surface);border-radius:12px;padding:12px 14px;margin-bottom:5px;position:relative}
 .fav-item .fav-role{font-size:10px;color:var(--text3);margin-bottom:3px}
-.fav-item .fav-content{font-size:14px;line-height:1.5;margin-bottom:3px}
+.fav-item .fav-content{font-size:14px;line-height:1.5;color:var(--text);margin-bottom:3px}
 .fav-item .fav-date{font-size:10px;color:var(--text3)}
 .fav-item .fav-del{position:absolute;top:8px;right:10px;background:0;border:none;color:var(--text3);cursor:pointer;font-size:16px}
-.fav-item .fav-del:active{color:var(--danger)}
+.fav-item .fav-del:active{color:#e06060}
 .fav-empty{text-align:center;padding:60px 20px;color:var(--text3)}
 .fav-empty .fav-empty-icon{font-size:40px;margin-bottom:12px}
 
@@ -148,34 +157,28 @@ body{
 #profile-view{padding:24px 18px;align-items:center;gap:12px}
 #profile-view .pf-av{width:80px;height:80px;border-radius:50%;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:38px;overflow:hidden;flex-shrink:0}
 #profile-view .pf-av img{width:100%;height:100%;object-fit:cover}
-#profile-view .pf-name{font-size:20px;font-weight:500}
+#profile-view .pf-name{font-size:20px;font-weight:500;color:var(--text)}
 #profile-view .pf-bio{font-size:13px;color:var(--text2);text-align:center;line-height:1.5;max-width:280px}
 #profile-view .pf-tags{display:flex;flex-wrap:wrap;gap:5px;justify-content:center}
 #profile-view .pf-tag{font-size:10px;background:var(--surface);color:var(--accent);padding:3px 8px;border-radius:10px}
-
-/* stats cards */
 .stats-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;width:100%;max-width:300px;margin-top:4px}
 .stat-item{background:var(--surface);border-radius:12px;padding:10px 8px;text-align:center}
 .stat-item .sn{font-size:22px;font-weight:500;color:var(--accent)}
 .stat-item .sl{font-size:9px;color:var(--text3);margin-top:1px}
-
-/* anniversary */
 .ann-section{width:100%;max-width:300px;margin-top:8px}
 .ann-section h4{font-size:11px;color:var(--text3);margin-bottom:6px;text-align:center}
 .ann-item{display:flex;align-items:center;gap:8px;background:var(--surface);border-radius:10px;padding:10px 12px;margin-bottom:4px}
 .ann-item .ann-icon{font-size:18px}
 .ann-item .ann-info{flex:1}
-.ann-item .ann-title{font-size:13px}
+.ann-item .ann-title{font-size:13px;color:var(--text)}
 .ann-item .ann-date{font-size:10px;color:var(--text2)}
 .ann-item .ann-countdown{font-size:11px;color:var(--accent);font-weight:500;white-space:nowrap}
 .ann-add{display:flex;gap:6px;margin-top:6px}
-.ann-add input{flex:1;background:var(--surface);border:1px solid #2a2a2a;border-radius:10px;color:var(--text);padding:6px 10px;font-size:11px;outline:none;font-family:inherit}
+.ann-add input{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:10px;color:var(--text);padding:6px 10px;font-size:11px;outline:none;font-family:inherit}
 .ann-add input[type=date]{flex:0 0 auto;width:100px;color-scheme:dark}
-.ann-add button{background:var(--accent);color:#fff;border:none;border-radius:10px;padding:6px 12px;font-size:11px;cursor:pointer;white-space:nowrap}
+.ann-add button{background:var(--accent);color:var(--btn-text);border:none;border-radius:10px;padding:6px 12px;font-size:11px;cursor:pointer;white-space:nowrap}
 .ann-del{background:0;border:none;color:var(--text3);cursor:pointer;font-size:12px;padding:2px}
-.ann-del:active{color:var(--danger)}
-
-/* timeline */
+.ann-del:active{color:#e06060}
 .pf-timeline{width:100%;max-width:300px;margin-top:8px}
 .pf-timeline h4{font-size:11px;color:var(--text3);margin-bottom:6px;text-align:center}
 .pf-tl-item{display:flex;gap:8px;margin-bottom:6px;font-size:11px}
@@ -188,7 +191,7 @@ body{
 .section{margin-bottom:16px}
 .section h3{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:7px;padding-left:4px}
 .section .row{display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--surface);border-radius:10px;margin-bottom:4px;gap:10px}
-.section .row .label{font-size:13px;flex-shrink:0}
+.section .row .label{font-size:13px;color:var(--text);flex-shrink:0}
 .section .row .val{font-size:12px;color:var(--text2);text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .section .row input.val{background:0;border:none;color:var(--text);text-align:right;outline:none;font-family:inherit;font-size:12px;width:120px}
 .av-row{display:flex;align-items:center;gap:8px}
@@ -198,7 +201,7 @@ body{
 .av-row .av-actions button{background:var(--surface2);border:none;color:var(--text);padding:4px 10px;border-radius:12px;font-size:11px;cursor:pointer;font-family:inherit}
 .av-row .av-actions button:active{opacity:.7}
 .theme-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
-.theme-card{cursor:pointer;background:var(--surface);border-radius:12px;padding:10px 8px;text-align:center;border:2px solid transparent;transition:border-color .2s}
+.theme-card{cursor:pointer;background:var(--surface);border-radius:12px;padding:10px 8px;text-align:center;border:2px solid transparent}
 .theme-card.on{border-color:var(--accent)}
 .theme-card .t-dot{width:24px;height:24px;border-radius:50%;margin:0 auto 4px}
 .theme-card .t-name{font-size:10px;color:var(--text2)}
@@ -208,18 +211,18 @@ body{
 #emoji-picker.show{display:flex}
 #emoji-picker .box{background:var(--surface2);border-radius:16px;padding:16px;width:90%;max-width:320px}
 #emoji-picker .grid{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
-#emoji-picker .grid span{width:42px;height:42px;display:flex;align-items:center;justify-content:center;font-size:24px;cursor:pointer;border-radius:10px}
+#emoji-picker .grid span{width:42px;height:42px;display:flex;align-items:center;justify-content:center;font-size:24px;cursor:pointer;border-radius:10px;color:var(--text)}
 #emoji-picker .grid span:active{background:var(--surface)}
 #emoji-picker .cancel{display:block;margin:12px auto 0;background:0;border:none;color:var(--text2);font-size:13px;cursor:pointer}
 
 /* ========== BOTTOM NAV ========== */
-#bottom-nav{display:flex;border-top:1px solid #1a1a1a;flex-shrink:0;padding-bottom:var(--safe-b);background:var(--bg)}
-#bottom-nav button{flex:1;background:0;border:none;color:var(--text3);padding:7px 0 3px;font-size:9px;font-family:inherit;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:1px;transition:color .2s}
+#bottom-nav{display:flex;border-top:1px solid var(--nav-border);flex-shrink:0;padding-bottom:var(--safe-b);background:var(--bg)}
+#bottom-nav button{flex:1;background:0;border:none;color:var(--text3);padding:7px 0 3px;font-size:9px;font-family:inherit;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:1px}
 #bottom-nav button .ico{font-size:17px}
 #bottom-nav button.on{color:var(--accent)}
 
 /* ========== TOAST ========== */
-#toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(40,40,40,.95);color:var(--text);padding:8px 20px;border-radius:20px;font-size:13px;pointer-events:none;opacity:0;transition:opacity .2s;z-index:300}
+#toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--surface2);color:var(--text);padding:8px 20px;border-radius:20px;font-size:13px;pointer-events:none;opacity:0;transition:opacity .2s;z-index:300;box-shadow:0 4px 16px var(--shadow)}
 #toast.show{opacity:1}
 
 @keyframes msgIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
@@ -227,7 +230,7 @@ body{
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 
 @media(min-width:640px){
-  #main-app{max-width:480px;margin:0 auto;border-left:1px solid #1a1a1a;border-right:1px solid #1a1a1a}
+  #main-app{max-width:480px;margin:0 auto;border-left:1px solid var(--nav-border);border-right:1px solid var(--nav-border)}
   #lock-screen{max-width:480px;margin:0 auto;left:50%;transform:translateX(-50%)}
   .msg-bubble{max-width:65%}
 }
@@ -252,13 +255,11 @@ body{
 <div id="main-app">
   <div id="topbar">
     <span class="title" id="topbar-title">阿恕</span>
-    <span id="topbar-subtabs" class="sub-tabs"></span>
     <button class="top-btn" id="search-toggle" onclick="App.toggleSearch()" style="display:none">🔍</button>
   </div>
   <div id="search-bar"><input id="search-input" placeholder="搜索聊天记录..." oninput="App.doSearch()"><button class="cancel" onclick="App.closeSearch()">取消</button></div>
 
   <div id="views">
-    <!-- CHAT -->
     <div class="view active" id="chat-view">
       <div id="chat-msgs"></div>
       <div id="scroll-btn" onclick="App.scrollDown()">↓</div>
@@ -267,8 +268,6 @@ body{
         <button id="send-btn" onclick="App.send()">↑</button>
       </div>
     </div>
-
-    <!-- MEMORY (has sub: 记忆/日记) -->
     <div class="view" id="memory-view">
       <div class="mem-stats" id="mem-stats"></div>
       <div class="mem-section"><h3>长期记忆</h3><div id="mem-long"></div></div>
@@ -280,22 +279,11 @@ body{
         <button onclick="App.addMemory()">添加</button>
       </div>
     </div>
-
-    <!-- DIARY (shares memory-view slot) -->
     <div class="view" id="diary-view">
       <div id="diary-entries"></div>
-      <div class="diary-add">
-        <textarea id="diary-input" placeholder="写今天的日记..."></textarea>
-        <button onclick="App.addDiary()">记一笔</button>
-      </div>
+      <div class="diary-add"><textarea id="diary-input" placeholder="写今天的日记..."></textarea><button onclick="App.addDiary()">记一笔</button></div>
     </div>
-
-    <!-- FAVORITES -->
-    <div class="view" id="fav-view">
-      <div class="fav-empty" id="fav-empty"><div class="fav-empty-icon">⭐</div>还没有收藏<br>长按消息可以收藏</div>
-    </div>
-
-    <!-- PROFILE -->
+    <div class="view" id="fav-view"><div class="fav-empty" id="fav-empty"><div class="fav-empty-icon">⭐</div>还没有收藏<br>长按消息可以收藏</div></div>
     <div class="view" id="profile-view">
       <div class="pf-av" id="pf-avatar">✦</div>
       <div class="pf-name" id="pf-name">阿恕</div>
@@ -305,8 +293,6 @@ body{
       <div class="ann-section" id="ann-section"></div>
       <div class="pf-timeline" id="pf-timeline"></div>
     </div>
-
-    <!-- SETTINGS -->
     <div class="view" id="settings-view">
       <div class="section"><h3>角色</h3>
         <div class="row av-row"><div class="av-prev" id="set-ai-av">✦</div><div class="av-actions"><button onclick="App.pickEmoji('ai')">emoji</button><button onclick="App.pickImage('ai')">拍照</button></div></div>
@@ -322,8 +308,8 @@ body{
       </div>
       <div class="section"><h3>主题</h3><div class="theme-grid" id="theme-grid"></div></div>
       <div class="section"><h3>数据</h3>
-        <div class="row" onclick="App.clearHistory()" style="cursor:pointer"><span class="label">清空聊天记录</span><span class="val" style="color:var(--danger)">清除</span></div>
-        <div class="row" onclick="App.clearMemories()" style="cursor:pointer"><span class="label">清空记忆</span><span class="val" style="color:var(--danger)">清除</span></div>
+        <div class="row" onclick="App.clearHistory()" style="cursor:pointer"><span class="label">清空聊天记录</span><span class="val" style="color:#e06060">清除</span></div>
+        <div class="row" onclick="App.clearMemories()" style="cursor:pointer"><span class="label">清空记忆</span><span class="val" style="color:#e06060">清除</span></div>
       </div>
     </div>
   </div>
@@ -351,15 +337,19 @@ const ENC = {"salt":"pzRm3EOnaRZW+rfG4i0jpg==","iv":"jEL3CJWH6MrCy9uY","encrypte
 // ===== APP =====
 var App = {
   API_KEY:'',SYSTEM:'',history:[],memories:[],favorites:[],diaries:[],anniversaries:[],
-  waiting:false,userScrolledUp:false,curView:'chat',curSubView:'mem',
+  waiting:false,userScrolledUp:false,curView:'chat',
   emojiTarget:null,searchMode:false,
   avMe:'😊',avAi:'✦',splash:'✦',
   aiName:'阿恕',aiBio:'如你的心',aiTags:'温柔, 陪伴型, 治愈系',
   theme:'默认黑夜',
   THEMES:{
-    '默认黑夜':'#5b9eff','冬日雪景':'#a0b8d8','樱花粉':'#e8919c','海洋蓝':'#4db6ac','星空紫':'#9b6bdf','暖阳黄':'#f0a840'
+    '默认黑夜':  {bg:'#0a0a0a',surface:'#141414',surface2:'#1e1e1e',text:'#e6e3dd',text2:'#888',text3:'#555',accent:'#5b9eff',bubbleU:'#5b9eff',bubbleA:'#1a1a1a',bubbleAText:'#cfcbc4',border:'#222',navBorder:'#1a1a1a'},
+    '冬日雪景':  {bg:'#0a0d10',surface:'#14181c',surface2:'#1e2328',text:'#e0e4e8',text2:'#8898a8',text3:'#556678',accent:'#8db8e0',bubbleU:'#8db8e0',bubbleA:'#1a1e22',bubbleAText:'#c8d0d8',border:'#242a30',navBorder:'#1a1e22'},
+    '樱花粉':    {bg:'#0f0c0d',surface:'#1a1416',surface2:'#241c1e',text:'#e8dfe0',text2:'#988890',text3:'#655b5e',accent:'#e8919c',bubbleU:'#e8919c',bubbleA:'#1f181a',bubbleAText:'#d0c8c9',border:'#2a2023',navBorder:'#1f181a'},
+    '海洋蓝':    {bg:'#0a0e0f',surface:'#141a1c',surface2:'#1e2426',text:'#dde4e6',text2:'#789098',text3:'#4d6468',accent:'#4db6ac',bubbleU:'#4db6ac',bubbleA:'#1a1f20',bubbleAText:'#c4d0d2',border:'#242a2c',navBorder:'#1a1f20'},
+    '星空紫':    {bg:'#0c0b10',surface:'#16141c',surface2:'#201e28',text:'#e0dde8',text2:'#9088a0',text3:'#5e5870',accent:'#9b6bdf',bubbleU:'#9b6bdf',bubbleA:'#1c1822',bubbleAText:'#cdc8d4',border:'#282430',navBorder:'#1c1822'},
+    '暖阳黄':    {bg:'#0f0d09',surface:'#1a1710',surface2:'#242016',text:'#e8e2d0',text2:'#988e70',text3:'#655e48',accent:'#f0a840',bubbleU:'#f0a840',bubbleA:'#1f1b14',bubbleAText:'#d0c9b6',border:'#2a2418',navBorder:'#1f1b14'}
   },
-  COLORS_BY_THEME:{'默认黑夜':['#5b9eff','#9b6bdf','#e06090','#4caf50','#ff9800','#00bcd4','#c8963e','#607d8b'],'冬日雪景':['#a0b8d8','#b0c4de','#c8d8e8','#8faac8','#8899aa','#d0dce8','#b8c8d8','#a0b0c0'],'樱花粉':['#e8919c','#f0a0a8','#e8b0b8','#d87888','#e0c0c8','#f0b8c0','#d89098','#e0a0a8'],'海洋蓝':['#4db6ac','#5ec4b8','#6dd0c0','#3da89e','#70d4c4','#50c0b0','#45b0a4','#58c8b8'],'星空紫':['#9b6bdf','#a878e8','#b088f0','#8e5ed0','#c098f8','#a070e0','#9668d8','#b488f0'],'暖阳黄':['#f0a840','#f0b860','#e8c070','#e09830','#f0c880','#e8a850','#f0b050','#e0b860']},
   EMOJIS:['😊','😎','🥰','😇','🤩','🫶','🐱','🐰','🦊','🐼','🌸','⭐','✨','💫','🌙','☀️','💖','🎀','🍀','🫧'],
   DATES:{firstChat:'2026-07-18',relationship:'2026-07-20'},
   ctxTarget:null,
@@ -368,13 +358,10 @@ var App = {
   init:function(){
     var s=this;
     try{
-      s.avMe=localStorage.getItem('xk_av_me')||'😊';
-      s.avAi=localStorage.getItem('xk_av_ai')||'✦';
-      s.splash=localStorage.getItem('xk_splash')||'✦';
-      s.aiName=localStorage.getItem('xk_ai_name')||'阿恕';
-      s.aiBio=localStorage.getItem('xk_ai_bio')||'如你的心';
+      s.avMe=localStorage.getItem('xk_av_me')||'😊';s.avAi=localStorage.getItem('xk_av_ai')||'✦';
+      s.splash=localStorage.getItem('xk_splash')||'✦';s.theme=localStorage.getItem('xk_theme')||'默认黑夜';
+      s.aiName=localStorage.getItem('xk_ai_name')||'阿恕';s.aiBio=localStorage.getItem('xk_ai_bio')||'如你的心';
       s.aiTags=localStorage.getItem('xk_ai_tags')||'温柔, 陪伴型, 治愈系';
-      s.theme=localStorage.getItem('xk_theme')||'默认黑夜';
       s.memories=JSON.parse(localStorage.getItem('xk_memories')||'[]');
       s.favorites=JSON.parse(localStorage.getItem('xk_favorites')||'[]');
       s.diaries=JSON.parse(localStorage.getItem('xk_diaries')||'[]');
@@ -391,8 +378,7 @@ var App = {
     document.getElementById('chat-msgs').addEventListener('scroll',function(){
       var atBottom=this.scrollHeight-this.scrollTop-this.clientHeight<80;
       s.userScrolledUp=!atBottom;
-      var btn=document.getElementById('scroll-btn');
-      if(s.userScrolledUp)btn.classList.add('show');else btn.classList.remove('show');
+      var btn=document.getElementById('scroll-btn');if(s.userScrolledUp)btn.classList.add('show');else btn.classList.remove('show');
     });
     document.getElementById('set-ai-name').addEventListener('change',function(){s.saveName(this.value)});
     document.getElementById('set-ai-bio').addEventListener('change',function(){s.saveBio(this.value)});
@@ -409,13 +395,8 @@ var App = {
 
   renderLockCard:function(){
     var s=this,days=Math.max(1,Math.floor((Date.now()-new Date(s.DATES.firstChat).getTime())/86400000));
-    var streak=Math.max(1,Math.ceil((Date.now()-new Date(s.DATES.firstChat).getTime())/86400000));
-    var recent=s.history.length?s.history[s.history.length-1].content:'';
-    if(recent.length>30)recent=recent.slice(0,30)+'...';
-    document.getElementById('home-card').innerHTML=
-      '<div style="font-size:13px;color:var(--text2)">相识第 <strong style="color:var(--accent);font-size:18px">'+days+'</strong> 天</div>'+
-      '<div class="stat-row"><span>记忆 <strong>'+s.memories.length+'</strong></span><span>收藏 <strong>'+s.favorites.length+'</strong></span></div>'+
-      (recent?'<div class="recent-msg">最近："'+s.esc(recent)+'"</div>':'');
+    var recent=s.history.length?s.history[s.history.length-1].content:'';if(recent.length>30)recent=recent.slice(0,30)+'...';
+    document.getElementById('home-card').innerHTML='<div style="font-size:13px;color:var(--text2)">相识第 <strong style="color:var(--accent);font-size:18px">'+days+'</strong> 天</div><div class="stat-row"><span>记忆 <strong>'+s.memories.length+'</strong></span><span>收藏 <strong>'+s.favorites.length+'</strong></span></div>'+(recent?'<div class="recent-msg">最近："'+s.esc(recent)+'"</div>':'');
     document.getElementById('lock-sub').textContent=s.aiBio;
   },
 
@@ -440,153 +421,74 @@ var App = {
     document.getElementById('lock-screen').style.display='none';
     document.getElementById('main-app').classList.add('show');
     document.getElementById('search-toggle').style.display='block';
-    document.getElementById('chat-input').focus();
-    this.loadHistory();
+    document.getElementById('chat-input').focus();this.loadHistory();
   },
 
   // ===== HISTORY =====
   loadHistory:function(){
-    var s=this;
-    try{s.history=JSON.parse(localStorage.getItem('xk_history')||'[]')}catch(e){}
+    var s=this;try{s.history=JSON.parse(localStorage.getItem('xk_history')||'[]')}catch(e){}
     document.getElementById('chat-msgs').innerHTML='';
     for(var i=0;i<s.history.length;i++){var m=s.history[i];s.renderMsg(m.role==='user'?'me':'ai',m.content,true,i)}
     if(!s.history.length)s.renderMsg('ai','嗯。',true);
   },
   saveHistory:function(){try{localStorage.setItem('xk_history',JSON.stringify(this.history.slice(-80)))}catch(e){}},
-  clearHistory:function(){if(!confirm('确定清空聊天记录？'))return;this.history=[];this.saveHistory();document.getElementById('chat-msgs').innerHTML='';this.renderMsg('ai','嗯。',true);this.toast('已清空')},
+  clearHistory:function(){if(!confirm('确定清空？'))return;this.history=[];this.saveHistory();document.getElementById('chat-msgs').innerHTML='';this.renderMsg('ai','嗯。',true);this.toast('已清空')},
 
   // ===== MEMORY =====
   saveMemories:function(){try{localStorage.setItem('xk_memories',JSON.stringify(this.memories))}catch(e){};this.renderLockCard()},
   clearMemories:function(){if(!confirm('确定清空所有记忆？'))return;this.memories=[];this.saveMemories();this.toast('已清空');if(this.curView==='memory')this.renderMemories()},
-  addMemory:function(){
-    var inp=document.getElementById('mem-new-input'),cat=document.getElementById('mem-new-cat'),txt=inp.value.trim();
-    if(!txt)return;
-    this.memories.push({id:'m'+Date.now(),content:txt,category:cat.value,date:new Date().toISOString().split('T')[0]});
-    this.saveMemories();inp.value='';this.renderMemories();this.toast('记忆已添加');
-  },
+  addMemory:function(){var inp=document.getElementById('mem-new-input'),cat=document.getElementById('mem-new-cat'),txt=inp.value.trim();if(!txt)return;this.memories.push({id:'m'+Date.now(),content:txt,category:cat.value,date:new Date().toISOString().split('T')[0]});this.saveMemories();inp.value='';this.renderMemories();this.toast('记忆已添加')},
   deleteMemory:function(id){this.memories=this.memories.filter(function(m){return m.id!==id});this.saveMemories();this.renderMemories()},
   renderMemories:function(){
-    var s=this,long=s.memories.filter(function(m){return m.category==='long-term'});
-    var rel=s.memories.filter(function(m){return m.category==='relationship'});
-    var recent=s.memories.slice().sort(function(a,b){return b.date.localeCompare(a.date)}).slice(0,5);
+    var s=this,long=s.memories.filter(function(m){return m.category==='long-term'}),rel=s.memories.filter(function(m){return m.category==='relationship'}),recent=s.memories.slice().sort(function(a,b){return b.date.localeCompare(a.date)}).slice(0,5);
     document.getElementById('mem-stats').innerHTML='<div class="mem-stat"><div class="num">'+long.length+'</div><div class="lbl">长期记忆</div></div><div class="mem-stat"><div class="num">'+rel.length+'</div><div class="lbl">关系记忆</div></div><div class="mem-stat"><div class="num">'+recent.length+'</div><div class="lbl">最近更新</div></div>';
-    document.getElementById('mem-long').innerHTML=s.memCards(long);
-    document.getElementById('mem-rel').innerHTML=s.memCards(rel);
-    document.getElementById('mem-recent').innerHTML=s.memCards(recent);
+    document.getElementById('mem-long').innerHTML=s.memCards(long);document.getElementById('mem-rel').innerHTML=s.memCards(rel);document.getElementById('mem-recent').innerHTML=s.memCards(recent);
   },
-  memCards:function(list){
-    var s=this,h='';
-    for(var i=0;i<list.length;i++){var m=list[i];h+='<div class="mem-card"><span class="mem-icon">'+(m.category==='relationship'?'💗':'📌')+'</span><span class="mem-text">'+s.esc(m.content)+'</span><span class="mem-date">'+m.date+'</span><button class="mem-del" onclick="App.deleteMemory(\''+m.id+'\')">✕</button></div>'}
-    return h||'<div style="color:var(--text3);font-size:13px;padding:8px 0">暂无</div>';
-  },
+  memCards:function(list){var s=this,h='';for(var i=0;i<list.length;i++){var m=list[i];h+='<div class="mem-card"><span class="mem-icon">'+(m.category==='relationship'?'💗':'📌')+'</span><span class="mem-text">'+s.esc(m.content)+'</span><span class="mem-date">'+m.date+'</span><button class="mem-del" onclick="App.deleteMemory(\''+m.id+'\')">✕</button></div>'}return h||'<div style="color:var(--text3);font-size:13px;padding:8px 0">暂无</div>'},
 
   // ===== DIARY =====
   saveDiaries:function(){try{localStorage.setItem('xk_diaries',JSON.stringify(this.diaries))}catch(e){}},
-  addDiary:function(){
-    var inp=document.getElementById('diary-input'),txt=inp.value.trim();if(!txt)return;
-    var today=new Date().toISOString().split('T')[0];
-    var existing=this.diaries.find(function(d){return d.date===today});
-    if(existing){existing.content=txt;this.toast('日记已更新')}
-    else{this.diaries.push({date:today,content:txt,mood:'📝'});this.toast('日记已添加')}
-    this.saveDiaries();inp.value='';this.renderDiaries();
-  },
-  renderDiaries:function(){
-    var s=this,h='',entries=s.diaries.slice().sort(function(a,b){return b.date.localeCompare(a.date)});
-    for(var i=0;i<entries.length;i++){
-      var e=entries[i];
-      h+='<div class="diary-entry"><div class="d-header"><span class="d-date">'+e.date+'</span><span class="d-mood">'+e.mood+'</span></div><div class="d-content">'+s.esc(e.content)+'</div></div>';
-    }
-    if(!h)h='<div style="text-align:center;padding:60px 20px;color:var(--text3)">📓<br><br>还没有日记<br>写下今天发生的事吧</div>';
-    document.getElementById('diary-entries').innerHTML=h;
-  },
+  addDiary:function(){var inp=document.getElementById('diary-input'),txt=inp.value.trim();if(!txt)return;var today=new Date().toISOString().split('T')[0],existing=this.diaries.find(function(d){return d.date===today});if(existing){existing.content=txt;this.toast('日记已更新')}else{this.diaries.push({date:today,content:txt,mood:'📝'});this.toast('日记已添加')}this.saveDiaries();inp.value='';this.renderDiaries()},
+  renderDiaries:function(){var s=this,h='',entries=s.diaries.slice().sort(function(a,b){return b.date.localeCompare(a.date)});for(var i=0;i<entries.length;i++){var e=entries[i];h+='<div class="diary-entry"><div class="d-header"><span class="d-date">'+e.date+'</span><span class="d-mood">'+e.mood+'</span></div><div class="d-content">'+s.esc(e.content)+'</div></div>'}if(!h)h='<div style="text-align:center;padding:60px 20px;color:var(--text3)">📓<br><br>还没有日记<br>写下今天发生的事吧</div>';document.getElementById('diary-entries').innerHTML=h},
 
   // ===== ANNIVERSARIES =====
   saveAnniversaries:function(){try{localStorage.setItem('xk_anniversaries',JSON.stringify(this.anniversaries))}catch(e){}},
-  addAnniversary:function(){
-    var title=document.getElementById('ann-title').value.trim();
-    var date=document.getElementById('ann-date').value;
-    if(!title||!date)return;
-    this.anniversaries.push({id:'a'+Date.now(),title:title,date:date,icon:'💞'});
-    this.saveAnniversaries();this.renderAnniversaries();this.toast('纪念日已添加');
-  },
+  addAnniversary:function(){var title=document.getElementById('ann-title').value.trim(),date=document.getElementById('ann-date').value;if(!title||!date)return;this.anniversaries.push({id:'a'+Date.now(),title:title,date:date,icon:'💞'});this.saveAnniversaries();this.renderAnniversaries();this.toast('纪念日已添加')},
   deleteAnniversary:function(id){this.anniversaries=this.anniversaries.filter(function(a){return a.id!==id});this.saveAnniversaries();this.renderAnniversaries()},
   renderAnniversaries:function(){
     var s=this,h='',today=new Date();today.setHours(0,0,0,0);
-    var auto=[{title:'第一次聊天',date:s.DATES.firstChat,icon:'💬'},{title:'建立关系',date:s.DATES.relationship,icon:'💞'}];
-    var all=auto.concat(s.anniversaries);
-    for(var i=0;i<all.length;i++){
-      var a=all[i],d=new Date(a.date),daysAgo=Math.floor((today-d)/86400000);
-      var countdown='';
-      if(daysAgo>=0){
-        var next=new Date(today.getFullYear(),d.getMonth(),d.getDate());
-        if(next<today)next.setFullYear(next.getFullYear()+1);
-        var remain=Math.ceil((next-today)/86400000);
-        if(remain===0)countdown='今天 💫';else if(remain===365||remain===366)countdown='今天 💫';
-        else countdown='还有 '+remain+' 天';
-      }
-      h+='<div class="ann-item"><span class="ann-icon">'+a.icon+'</span><div class="ann-info"><div class="ann-title">'+s.esc(a.title)+'</div><div class="ann-date">'+a.date+(daysAgo>=0?' · 已'+daysAgo+'天':'')+'</div></div><span class="ann-countdown">'+countdown+'</span>'+(a.id?'<button class="ann-del" onclick="App.deleteAnniversary(\''+a.id+'\')">✕</button>':'')+'</div>';
-    }
+    var auto=[{title:'第一次聊天',date:s.DATES.firstChat,icon:'💬'},{title:'建立关系',date:s.DATES.relationship,icon:'💞'}],all=auto.concat(s.anniversaries);
+    for(var i=0;i<all.length;i++){var a=all[i],d=new Date(a.date),daysAgo=Math.floor((today-d)/86400000),countdown='';if(daysAgo>=0){var next=new Date(today.getFullYear(),d.getMonth(),d.getDate());if(next<today)next.setFullYear(next.getFullYear()+1);var remain=Math.ceil((next-today)/86400000);countdown=remain===0?'今天 💫':'还有 '+remain+' 天'}h+='<div class="ann-item"><span class="ann-icon">'+a.icon+'</span><div class="ann-info"><div class="ann-title">'+s.esc(a.title)+'</div><div class="ann-date">'+a.date+(daysAgo>=0?' · 已'+daysAgo+'天':'')+'</div></div><span class="ann-countdown">'+countdown+'</span>'+(a.id?'<button class="ann-del" onclick="App.deleteAnniversary(\''+a.id+'\')">✕</button>':'')+'</div>'}
     h+='<div class="ann-add"><input id="ann-title" placeholder="纪念日名称"><input type="date" id="ann-date"><button onclick="App.addAnniversary()">+</button></div>';
     document.getElementById('ann-section').innerHTML='<h4>💞 纪念日</h4>'+h;
   },
 
   // ===== FAVORITES =====
   saveFavorites:function(){try{localStorage.setItem('xk_favorites',JSON.stringify(this.favorites))}catch(e){};this.renderLockCard()},
-  toggleFavorite:function(msgIdx){
-    var s=this,existing=s.favorites.find(function(f){return f.msgIdx===msgIdx});
-    if(existing){s.favorites=s.favorites.filter(function(f){return f.msgIdx!==msgIdx});s.toast('已取消收藏')}
-    else{var m=s.history[msgIdx];if(!m)return;s.favorites.push({msgIdx:msgIdx,role:m.role==='user'?'me':'ai',content:m.content,date:new Date().toISOString().split('T')[0]});s.toast('已收藏 ⭐')}
-    s.saveFavorites();
-  },
-  renderFavorites:function(){
-    var s=this;if(!s.favorites.length){document.getElementById('fav-view').innerHTML='<div class="fav-empty" id="fav-empty"><div class="fav-empty-icon">⭐</div>还没有收藏<br>长按消息可以收藏</div>';return}
-    var h='';
-    for(var i=s.favorites.length-1;i>=0;i--){var f=s.favorites[i];h+='<div class="fav-item"><div class="fav-role">'+(f.role==='me'?'我':'阿恕')+'</div><div class="fav-content">'+s.esc(f.content)+'</div><div class="fav-date">'+f.date+'</div><button class="fav-del" onclick="App.deleteFav('+i+')">✕</button></div>'}
-    document.getElementById('fav-view').innerHTML='<div style="padding:6px 10px">'+h+'</div>';
-  },
+  toggleFavorite:function(msgIdx){var s=this,existing=s.favorites.find(function(f){return f.msgIdx===msgIdx});if(existing){s.favorites=s.favorites.filter(function(f){return f.msgIdx!==msgIdx});s.toast('已取消收藏')}else{var m=s.history[msgIdx];if(!m)return;s.favorites.push({msgIdx:msgIdx,role:m.role==='user'?'me':'ai',content:m.content,date:new Date().toISOString().split('T')[0]});s.toast('已收藏 ⭐')}s.saveFavorites()},
+  renderFavorites:function(){var s=this;if(!s.favorites.length){document.getElementById('fav-view').innerHTML='<div class="fav-empty"><div class="fav-empty-icon">⭐</div>还没有收藏<br>长按消息可以收藏</div>';return}var h='';for(var i=s.favorites.length-1;i>=0;i--){var f=s.favorites[i];h+='<div class="fav-item"><div class="fav-role">'+(f.role==='me'?'我':'阿恕')+'</div><div class="fav-content">'+s.esc(f.content)+'</div><div class="fav-date">'+f.date+'</div><button class="fav-del" onclick="App.deleteFav('+i+')">✕</button></div>'}document.getElementById('fav-view').innerHTML='<div style="padding:6px 10px">'+h+'</div>'},
   deleteFav:function(i){this.favorites.splice(i,1);this.saveFavorites();this.renderFavorites();this.toast('已删除')},
 
   // ===== VIEW SWITCHING =====
   switchView:function(name){
     var s=this;s.curView=name;s.closeSearch();
-    var views=document.querySelectorAll('.view');
-    for(var i=0;i<views.length;i++)views[i].classList.remove('active');
+    var views=document.querySelectorAll('.view');for(var i=0;i<views.length;i++)views[i].classList.remove('active');
     var t=document.getElementById(name+'-view');if(t)t.classList.add('active');
-    var navs=document.querySelectorAll('#bottom-nav button');
-    for(var i=0;i<navs.length;i++)navs[i].classList.remove('on');
+    var navs=document.querySelectorAll('#bottom-nav button');for(var i=0;i<navs.length;i++)navs[i].classList.remove('on');
     var n=document.getElementById('nav-'+name);if(n)n.classList.add('on');
     var titles={chat:s.aiName,memory:'记忆',diary:'日记',fav:'收藏',profile:'资料',settings:'设置'};
     document.getElementById('topbar-title').textContent=titles[name]||s.aiName;
     document.getElementById('search-toggle').style.display=name==='chat'?'block':'none';
-    document.getElementById('topbar-subtabs').innerHTML='';
-    if(name==='memory')s.renderMemories();
-    if(name==='diary')s.renderDiaries();
-    if(name==='fav')s.renderFavorites();
+    if(name==='memory')s.renderMemories();if(name==='diary')s.renderDiaries();if(name==='fav')s.renderFavorites();
     if(name==='profile'){s.renderAnniversaries();s.renderStats();s.refreshProfile()}
-    if(name==='settings')s.refreshSettings();
-    if(name==='chat'){document.getElementById('chat-input').focus();s.scrollDown()}
+    if(name==='settings')s.refreshSettings();if(name==='chat'){document.getElementById('chat-input').focus();s.scrollDown()}
   },
-  renderStats:function(){
-    var s=this,days=Math.max(1,Math.floor((Date.now()-new Date(s.DATES.firstChat).getTime())/86400000));
-    document.getElementById('stats-grid').innerHTML=
-      '<div class="stat-item"><div class="sn">'+s.history.length+'</div><div class="sl">总消息</div></div>'+
-      '<div class="stat-item"><div class="sn">'+s.memories.length+'</div><div class="sl">记忆</div></div>'+
-      '<div class="stat-item"><div class="sn">'+s.favorites.length+'</div><div class="sl">收藏</div></div>'+
-      '<div class="stat-item"><div class="sn">'+days+'</div><div class="sl">相识天数</div></div>'+
-      '<div class="stat-item"><div class="sn">'+s.diaries.length+'</div><div class="sl">日记</div></div>'+
-      '<div class="stat-item"><div class="sn">'+s.anniversaries.length+'</div><div class="sl">纪念日</div></div>';
-  },
+  renderStats:function(){var s=this,days=Math.max(1,Math.floor((Date.now()-new Date(s.DATES.firstChat).getTime())/86400000));document.getElementById('stats-grid').innerHTML='<div class="stat-item"><div class="sn">'+s.history.length+'</div><div class="sl">总消息</div></div><div class="stat-item"><div class="sn">'+s.memories.length+'</div><div class="sl">记忆</div></div><div class="stat-item"><div class="sn">'+s.favorites.length+'</div><div class="sl">收藏</div></div><div class="stat-item"><div class="sn">'+days+'</div><div class="sl">相识天数</div></div><div class="stat-item"><div class="sn">'+s.diaries.length+'</div><div class="sl">日记</div></div><div class="stat-item"><div class="sn">'+s.anniversaries.length+'</div><div class="sl">纪念日</div></div>'},
 
   // ===== SEARCH =====
   toggleSearch:function(){this.searchMode=!this.searchMode;var bar=document.getElementById('search-bar');if(this.searchMode){bar.classList.add('show');document.getElementById('search-input').focus()}else this.closeSearch()},
   closeSearch:function(){this.searchMode=false;document.getElementById('search-bar').classList.remove('show');document.getElementById('search-input').value='';this.loadHistory()},
-  doSearch:function(){
-    var q=document.getElementById('search-input').value.trim().toLowerCase(),msgs=document.getElementById('chat-msgs');msgs.innerHTML='';
-    if(!q){this.loadHistory();return}
-    var s=this,found=0;
-    for(var i=0;i<s.history.length;i++){var m=s.history[i];if(m.content.toLowerCase().indexOf(q)===-1)continue;var role=m.role==='user'?'me':'ai';s.renderMsg(role,s.highlight(m.content,q),true,i);found++}
-    if(!found)msgs.innerHTML='<div style="text-align:center;padding:40px;color:var(--text3)">没有找到</div>';
-  },
+  doSearch:function(){var q=document.getElementById('search-input').value.trim().toLowerCase(),msgs=document.getElementById('chat-msgs');msgs.innerHTML='';if(!q){this.loadHistory();return}var s=this,found=0;for(var i=0;i<s.history.length;i++){var m=s.history[i];if(m.content.toLowerCase().indexOf(q)===-1)continue;var role=m.role==='user'?'me':'ai';s.renderMsg(role,s.highlight(m.content,q),true,i);found++}if(!found)msgs.innerHTML='<div style="text-align:center;padding:40px;color:var(--text3)">没有找到</div>'},
   highlight:function(text,q){if(!q)return text;var re=new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi');return text.replace(re,'<mark>$1</mark>')},
 
   // ===== RENDER MESSAGE =====
@@ -598,18 +500,12 @@ var App = {
     var tm=document.createElement('span');tm.className='msg-time';tm.textContent=s.fmtTime();bubble.appendChild(tm);
     bubble.addEventListener('dblclick',function(){var txt=(this.textContent||'').replace(s.fmtTime(),'').trim();navigator.clipboard&&navigator.clipboard.writeText(txt).then(function(){s.toast('已复制')}).catch(function(){})});
     bubble.addEventListener('contextmenu',function(e){e.preventDefault();s.showCtx(e,msgIdx)});
-    var holdTimer;
-    bubble.addEventListener('touchstart',function(e){holdTimer=setTimeout(function(){s.showCtx(e,msgIdx)},500)});
-    bubble.addEventListener('touchend',function(){clearTimeout(holdTimer)});
-    bubble.addEventListener('touchmove',function(){clearTimeout(holdTimer)});
+    var holdTimer;bubble.addEventListener('touchstart',function(e){holdTimer=setTimeout(function(){s.showCtx(e,msgIdx)},500)});
+    bubble.addEventListener('touchend',function(){clearTimeout(holdTimer)});bubble.addEventListener('touchmove',function(){clearTimeout(holdTimer)});
     if(role==='me'){row.appendChild(bubble);row.appendChild(av)}else{row.appendChild(av);row.appendChild(bubble)}
-    document.getElementById('chat-msgs').appendChild(row);
-    if(!s.userScrolledUp)s.scrollDown();
-    if(!skipSave)s.saveHistory();
-    return body;
+    document.getElementById('chat-msgs').appendChild(row);if(!s.userScrolledUp)s.scrollDown();if(!skipSave)s.saveHistory();return body;
   },
 
-  // ===== CONTEXT MENU =====
   showCtx:function(e,msgIdx){if(msgIdx==null)return;this.ctxTarget=msgIdx;var menu=document.getElementById('ctx-menu'),s=this,isFav=s.favorites.some(function(f){return f.msgIdx===msgIdx});menu.innerHTML='<button onclick="App.copyMsg('+msgIdx+')">📋 复制</button><button onclick="App.toggleFavorite('+msgIdx+')">'+(isFav?'💔 取消收藏':'⭐ 收藏')+'</button><button class="danger" onclick="App.deleteMsg('+msgIdx+')">🗑 删除</button>';menu.style.display='block';var x=e.touches?e.touches[0].clientX:e.clientX,y=e.touches?e.touches[0].clientY:e.clientY;menu.style.left=Math.min(x,window.innerWidth-140)+'px';menu.style.top=Math.min(y,window.innerHeight-140)+'px'},
   hideCtx:function(){document.getElementById('ctx-menu').style.display='none';this.ctxTarget=null},
   copyMsg:function(idx){var m=this.history[idx];if(!m)return;navigator.clipboard&&navigator.clipboard.writeText(m.content).catch(function(){});this.toast('已复制');this.hideCtx()},
@@ -617,23 +513,16 @@ var App = {
 
   // ===== SEND =====
   send:async function(){
-    var s=this,inp=document.getElementById('chat-input'),text=inp.value.trim();
-    if(!text||s.waiting)return;
-    s.waiting=true;document.getElementById('send-btn').disabled=true;
-    inp.value='';inp.style.height='auto';
-    s.history.push({role:'user',content:text});
-    while(s.history.length>80)s.history.shift();
-    s.renderMsg('me',text,false,s.history.length-1);
-    s.addTyping();s.userScrolledUp=false;
-    try{
-      var resp=await fetch('https://api.deepseek.com/anthropic/messages',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+s.API_KEY},body:JSON.stringify({model:'deepseek-v4-pro[1m]',max_tokens:2048,messages:[{role:'user',content:s.SYSTEM},{role:'assistant',content:'好的。'},...s.history],stream:true})});
-      s.removeTyping();
-      var body=s.renderMsg('ai',''),reader=resp.body.getReader(),decoder=new TextDecoder(),buf='',full='';
+    var s=this,inp=document.getElementById('chat-input'),text=inp.value.trim();if(!text||s.waiting)return;
+    s.waiting=true;document.getElementById('send-btn').disabled=true;inp.value='';inp.style.height='auto';
+    s.history.push({role:'user',content:text});while(s.history.length>80)s.history.shift();
+    s.renderMsg('me',text,false,s.history.length-1);s.addTyping();s.userScrolledUp=false;
+    try{var resp=await fetch('https://api.deepseek.com/anthropic/messages',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+s.API_KEY},body:JSON.stringify({model:'deepseek-v4-pro[1m]',max_tokens:2048,messages:[{role:'user',content:s.SYSTEM},{role:'assistant',content:'好的。'},...s.history],stream:true})});
+      s.removeTyping();var body=s.renderMsg('ai',''),reader=resp.body.getReader(),decoder=new TextDecoder(),buf='',full='';
       while(true){var r=await reader.read();if(r.done)break;buf+=decoder.decode(r.value,{stream:true});var lines=buf.split('\n');buf=lines.pop()||'';for(var i=0;i<lines.length;i++){if(lines[i].startsWith('data: ')){try{var d=JSON.parse(lines[i].slice(6));if(d.type==='content_block_delta'&&d.delta&&d.delta.text){full+=d.delta.text;body.textContent+=d.delta.text}}catch(e){}}}if(!s.userScrolledUp)s.scrollDown()}
       if(full)s.history.push({role:'assistant',content:full});s.saveHistory();
     }catch(e){s.removeTyping();var err=s.renderMsg('ai','连不上，重试一下');err.style.color='#e06060';s.history.pop()}
-    s.waiting=false;document.getElementById('send-btn').disabled=false;inp.focus();
-    s.renderLockCard();
+    s.waiting=false;document.getElementById('send-btn').disabled=false;inp.focus();s.renderLockCard();
   },
 
   // ===== HELPERS =====
@@ -647,7 +536,7 @@ var App = {
   // ===== AVATARS =====
   setAvEl:function(el,val){if(typeof val==='string'&&val.indexOf('data:')===0){el.textContent='';el.style.backgroundImage='url('+val+')';el.style.backgroundSize='cover';el.style.backgroundPosition='center'}else{el.textContent=val||'✨';el.style.backgroundImage='';el.style.backgroundSize=''}},
   refreshAllAvatars:function(){var s=this;s.setAvEl(document.getElementById('splash-img'),s.splash);document.getElementById('lock-name').textContent=s.aiName;s.setAvEl(document.getElementById('set-me-av'),s.avMe);s.setAvEl(document.getElementById('set-ai-av'),s.avAi);s.setAvEl(document.getElementById('set-splash-av'),s.splash);s.setAvEl(document.getElementById('pf-avatar'),s.avAi)},
-  refreshProfile:function(){var s=this;document.getElementById('pf-name').textContent=s.aiName;document.getElementById('pf-bio').textContent=s.aiBio;s.setAvEl(document.getElementById('pf-avatar'),s.avAi);document.getElementById('pf-created')&&(document.getElementById('pf-created').textContent='创建于 2026.07.18');var tags=s.aiTags.split(',').map(function(t){return t.trim()}).filter(Boolean);document.getElementById('pf-tags').innerHTML=tags.map(function(t){return '<span class="pf-tag">'+s.esc(t)+'</span>'}).join('');document.getElementById('pf-timeline').innerHTML='<h4>成长时间轴</h4><div class="pf-tl-item"><span class="tl-date">07.18</span><span class="tl-dot"></span><span class="tl-text">第一次聊天</span></div><div class="pf-tl-item"><span class="tl-date">07.19</span><span class="tl-dot"></span><span class="tl-text">搭建外接记忆库</span></div><div class="pf-tl-item"><span class="tl-date">07.20</span><span class="tl-dot"></span><span class="tl-text">创建手机聊天系统</span></div>'+(s.history.length>=100?'<div class="pf-tl-item"><span class="tl-date">'+new Date().toISOString().split('T')[0].slice(5)+'</span><span class="tl-dot"></span><span class="tl-text">累计100条消息</span></div>':'')},
+  refreshProfile:function(){var s=this;document.getElementById('pf-name').textContent=s.aiName;document.getElementById('pf-bio').textContent=s.aiBio;s.setAvEl(document.getElementById('pf-avatar'),s.avAi);var tags=s.aiTags.split(',').map(function(t){return t.trim()}).filter(Boolean);document.getElementById('pf-tags').innerHTML=tags.map(function(t){return '<span class="pf-tag">'+s.esc(t)+'</span>'}).join('');document.getElementById('pf-timeline').innerHTML='<h4>成长时间轴</h4><div class="pf-tl-item"><span class="tl-date">07.18</span><span class="tl-dot"></span><span class="tl-text">第一次聊天</span></div><div class="pf-tl-item"><span class="tl-date">07.19</span><span class="tl-dot"></span><span class="tl-text">搭建外接记忆库</span></div><div class="pf-tl-item"><span class="tl-date">07.20</span><span class="tl-dot"></span><span class="tl-text">创建手机聊天系统</span></div>'+(s.history.length>=100?'<div class="pf-tl-item"><span class="tl-date">'+new Date().toISOString().split('T')[0].slice(5)+'</span><span class="tl-dot"></span><span class="tl-text">累计100条消息</span></div>':'')},
   refreshSettings:function(){document.getElementById('set-ai-name').value=this.aiName;document.getElementById('set-ai-bio').value=this.aiBio;document.getElementById('set-ai-tags').value=this.aiTags;this.setAvEl(document.getElementById('set-me-av'),this.avMe);this.setAvEl(document.getElementById('set-ai-av'),this.avAi);this.setAvEl(document.getElementById('set-splash-av'),this.splash)},
 
   pickEmoji:function(target){var s=this;s.emojiTarget=target;var grid=document.getElementById('emoji-grid');grid.innerHTML='';s.EMOJIS.forEach(function(e){var sp=document.createElement('span');sp.textContent=e;sp.onclick=function(){s.saveAvatar(target,e);document.getElementById('emoji-picker').classList.remove('show')};grid.appendChild(sp)});document.getElementById('emoji-picker').classList.add('show')},
@@ -660,20 +549,23 @@ var App = {
   saveBio:function(b){this.aiBio=b||'如你的心';try{localStorage.setItem('xk_ai_bio',this.aiBio)}catch(e){};document.getElementById('pf-bio').textContent=this.aiBio;document.getElementById('lock-sub').textContent=this.aiBio},
   saveTags:function(t){this.aiTags=t;try{localStorage.setItem('xk_ai_tags',t)}catch(e){};this.refreshProfile()},
 
-  // ===== THEME =====
+  // ===== THEME SYSTEM =====
   applyTheme:function(){
-    var accent=this.THEMES[this.theme]||'#5b9eff';
-    document.documentElement.style.setProperty('--accent',accent);
-    document.documentElement.style.setProperty('--bubble-u',accent);
+    var t=this.THEMES[this.theme]||this.THEMES['默认黑夜'];
+    var root=document.documentElement.style;
+    root.setProperty('--bg',t.bg);root.setProperty('--surface',t.surface);root.setProperty('--surface2',t.surface2);
+    root.setProperty('--text',t.text);root.setProperty('--text2',t.text2);root.setProperty('--text3',t.text3);
+    root.setProperty('--accent',t.accent);root.setProperty('--bubble-u',t.bubbleU);
+    root.setProperty('--bubble-a',t.bubbleA);root.setProperty('--bubble-a-text',t.bubbleAText);
+    root.setProperty('--border',t.border);root.setProperty('--nav-border',t.navBorder);
   },
   buildThemeGrid:function(){
-    var s=this,grid=document.getElementById('theme-grid'),themes=Object.keys(s.THEMES);
-    grid.innerHTML='';
-    themes.forEach(function(t){
-      var c=s.THEMES[t],card=document.createElement('div');
+    var s=this,grid=document.getElementById('theme-grid'),names=Object.keys(s.THEMES);grid.innerHTML='';
+    names.forEach(function(t){
+      var c=s.THEMES[t].accent,card=document.createElement('div');
       card.className='theme-card'+(t===s.theme?' on':'');
       card.innerHTML='<div class="t-dot" style="background:'+c+'"></div><div class="t-name">'+t+'</div>';
-      card.onclick=function(){s.theme=t;try{localStorage.setItem('xk_theme',t)}catch(e){};s.applyTheme();s.buildThemeGrid();s.buildColorDots&&s.buildColorDots()};
+      card.onclick=function(){s.theme=t;try{localStorage.setItem('xk_theme',t)}catch(e){};s.applyTheme();s.buildThemeGrid()};
       grid.appendChild(card);
     });
   }
