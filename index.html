@@ -292,6 +292,7 @@ body{
   </div>
   <div id="msgs"></div>
   <div id="emojis"><div class="box"><div class="grid" id="emojiGrid"></div><button class="close" onclick="document.getElementById('emojis').classList.remove('show')">取消</button></div></div>
+  <input type="file" id="imgFile" accept="image/*" style="display:none" onchange="handleImgUpload(event)">
   <div id="scrolldown" onclick="scrollToBottom()">↓</div>
   <div id="bar">
     <div class="wrap">
@@ -377,6 +378,18 @@ function buildPalette(cur){
 // ===== AVATAR PICKER =====
 const EMOJIS=['😊','😎','🥰','😇','🤩','🫶','🐱','🐰','🦊','🐼','🌸','⭐','✨','💫','🌙','☀️','💖','🎀','🍀','🫧'];
 let pickingTarget=null;
+function setAvatarEl(el,val){
+  if(val.startsWith('data:')){
+    el.textContent='';
+    el.style.backgroundImage=`url(${val})`;
+    el.style.backgroundSize='cover';
+    el.style.backgroundPosition='center';
+  }else{
+    el.textContent=val;
+    el.style.backgroundImage='';
+    el.style.backgroundSize='';
+  }
+}
 function pickAvatar(who){
   pickingTarget=who;
   const grid=document.getElementById('emojiGrid');
@@ -385,16 +398,48 @@ function pickAvatar(who){
     const s=document.createElement('span');
     s.textContent=e;
     s.onclick=()=>{
-      if(who==='me'){avMe=e;localStorage.setItem('xk_av_me',e);document.getElementById('avMe').textContent=e;}
-      else{avAi=e;localStorage.setItem('xk_av_ai',e);document.getElementById('avAi').textContent=e;}
+      if(who==='me'){avMe=e;localStorage.setItem('xk_av_me',e);setAvatarEl(document.getElementById('avMe'),e);}
+      else{avAi=e;localStorage.setItem('xk_av_ai',e);setAvatarEl(document.getElementById('avAi'),e);}
       document.getElementById('emojis').classList.remove('show');
     };
     grid.appendChild(s);
   });
+  // upload button
+  const up=document.createElement('span');
+  up.textContent='📷';
+  up.style.fontSize='22px';
+  up.onclick=()=>document.getElementById('imgFile').click();
+  grid.appendChild(up);
   document.getElementById('emojis').classList.add('show');
 }
-document.getElementById('avMe').textContent=avMe;
-document.getElementById('avAi').textContent=avAi;
+function handleImgUpload(e){
+  const file=e.target.files[0];
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=function(){
+    const img=new Image();
+    img.onload=function(){
+      const c=document.createElement('canvas');
+      c.width=c.height=120;
+      const ctx=c.getContext('2d');
+      const s=Math.min(img.width,img.height);
+      const sx=(img.width-s)/2,sy=(img.height-s)/2;
+      ctx.drawImage(img,sx,sy,s,s,0,0,120,120);
+      const dataUrl=c.toDataURL('image/jpeg',0.7);
+      if(pickingTarget==='me'){
+        avMe=dataUrl;localStorage.setItem('xk_av_me',dataUrl);setAvatarEl(document.getElementById('avMe'),dataUrl);
+      }else{
+        avAi=dataUrl;localStorage.setItem('xk_av_ai',dataUrl);setAvatarEl(document.getElementById('avAi'),dataUrl);
+      }
+      document.getElementById('emojis').classList.remove('show');
+    };
+    img.src=reader.result;
+  };
+  reader.readAsDataURL(file);
+  e.target.value='';
+}
+setAvatarEl(document.getElementById('avMe'),avMe);
+setAvatarEl(document.getElementById('avAi'),avAi);
 
 // ===== UTILS =====
 function fmtTime(ts){
@@ -424,8 +469,9 @@ function addMsg(role,text,skipSave){
   row.className='row '+role;
   const av=document.createElement('div');
   av.className='avt';
-  av.textContent=role==='u'?avMe:avAi;
-  av.style.background=role==='u'?'#e8edf5':'#f0f0f0';
+  const avSrc=role==='u'?avMe:avAi;
+  setAvatarEl(av,avSrc);
+  if(!avSrc.startsWith('data:'))av.style.background=role==='u'?'#e8edf5':'#f0f0f0';
   const d=document.createElement('div');
   d.className='msg '+role;
   const body=document.createElement('span');body.className='body';body.textContent=text;
