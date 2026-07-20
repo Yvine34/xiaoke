@@ -99,19 +99,37 @@ body{
 #hd .status{font-size:11px;color:var(--muted);margin-top:2px}
 
 /* Color picker */
-#palette{display:flex;gap:6px;justify-content:center;padding:4px 0 8px;flex-shrink:0;background:var(--bg)}
+#palette{display:flex;gap:6px;justify-content:center;padding:4px 0 2px;flex-shrink:0;background:var(--bg)}
 #palette button{width:20px;height:20px;border-radius:50%;border:2px solid transparent;cursor:pointer;transition:transform .15s;padding:0;outline:none}
 #palette button:active{transform:scale(1.2)}
 #palette button.on{border-color:#999;box-shadow:0 0 0 2px rgba(0,0,0,.1)}
 
+/* Avatar picker */
+#avatars{display:flex;gap:20px;justify-content:center;padding:4px 0 8px;flex-shrink:0;background:var(--bg)}
+#avatars .wrap{display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer}
+#avatars .avt-big{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;background:#f0f0f0;border:1px solid #ddd;transition:transform .15s}
+#avatars .wrap:active .avt-big{transform:scale(1.1)}
+#avatars .lbl{font-size:10px;color:var(--muted)}
+
+/* Emoji popup */
+#emojis{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.35);display:none;align-items:center;justify-content:center;z-index:100}
+#emojis.show{display:flex}
+#emojis .box{background:var(--surface);border-radius:16px;padding:16px;max-width:300px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,.2)}
+#emojis .grid{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+#emojis .grid span{width:42px;height:42px;display:flex;align-items:center;justify-content:center;font-size:26px;cursor:pointer;border-radius:10px;transition:background .15s}
+#emojis .grid span:active{background:#eee}
+#emojis .close{display:block;margin:12px auto 0;background:0;border:none;color:var(--muted);font-size:13px;cursor:pointer;padding:4px 16px}
+
 /* Messages */
 #msgs{flex:1;overflow-y:auto;padding:10px 14px 4px;scroll-behavior:smooth}
-.row{display:flex;margin-bottom:6px;width:100%}
+.row{display:flex;align-items:flex-end;margin-bottom:6px;width:100%}
 .row.u{justify-content:flex-end}
 .row.a{justify-content:flex-start}
 .row.u .msg{margin-left:auto}
 .row.a .msg{margin-right:auto}
 .row:first-child{margin-top:4px}
+
+.avt{width:28px;height:28px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:15px;background:#f0f0f0;margin:0 6px}
 
 .msg{
   max-width:78%;
@@ -268,7 +286,12 @@ body{
 <div id="chat">
   <div id="hd"><div class="inner"><div class="name">阿恕</div><div class="status" id="st">在线</div></div></div>
   <div id="palette"></div>
+  <div id="avatars">
+    <div class="wrap" onclick="pickAvatar('me')"><div class="avt-big" id="avMe">😊</div><div class="lbl">我</div></div>
+    <div class="wrap" onclick="pickAvatar('ai')"><div class="avt-big" id="avAi">✦</div><div class="lbl">阿恕</div></div>
+  </div>
   <div id="msgs"></div>
+  <div id="emojis"><div class="box"><div class="grid" id="emojiGrid"></div><button class="close" onclick="document.getElementById('emojis').classList.remove('show')">取消</button></div></div>
   <div id="scrolldown" onclick="scrollToBottom()">↓</div>
   <div id="bar">
     <div class="wrap">
@@ -351,6 +374,28 @@ function buildPalette(cur){
   buildPalette(saved);
 })();
 
+// ===== AVATAR PICKER =====
+const EMOJIS=['😊','😎','🥰','😇','🤩','🫶','🐱','🐰','🦊','🐼','🌸','⭐','✨','💫','🌙','☀️','💖','🎀','🍀','🫧'];
+let pickingTarget=null;
+function pickAvatar(who){
+  pickingTarget=who;
+  const grid=document.getElementById('emojiGrid');
+  grid.innerHTML='';
+  EMOJIS.forEach(e=>{
+    const s=document.createElement('span');
+    s.textContent=e;
+    s.onclick=()=>{
+      if(who==='me'){avMe=e;localStorage.setItem('xk_av_me',e);document.getElementById('avMe').textContent=e;}
+      else{avAi=e;localStorage.setItem('xk_av_ai',e);document.getElementById('avAi').textContent=e;}
+      document.getElementById('emojis').classList.remove('show');
+    };
+    grid.appendChild(s);
+  });
+  document.getElementById('emojis').classList.add('show');
+}
+document.getElementById('avMe').textContent=avMe;
+document.getElementById('avAi').textContent=avAi;
+
 // ===== UTILS =====
 function fmtTime(ts){
   const d=new Date(ts||Date.now());
@@ -372,9 +417,15 @@ function showToast(txt){
 }
 
 // ===== ADD MESSAGE =====
+let avMe=localStorage.getItem('xk_av_me')||'😊';
+let avAi=localStorage.getItem('xk_av_ai')||'✦';
 function addMsg(role,text,skipSave){
   const row=document.createElement('div');
   row.className='row '+role;
+  const av=document.createElement('div');
+  av.className='avt';
+  av.textContent=role==='u'?avMe:avAi;
+  av.style.background=role==='u'?'#e8edf5':'#f0f0f0';
   const d=document.createElement('div');
   d.className='msg '+role;
   const body=document.createElement('span');body.className='body';body.textContent=text;
@@ -385,7 +436,8 @@ function addMsg(role,text,skipSave){
   const t=document.createElement('span');t.className='tm';
   t.textContent=fmtTime();
   d.appendChild(t);
-  row.appendChild(d);
+  if(role==='u'){row.appendChild(d);row.appendChild(av);}
+  else{row.appendChild(av);row.appendChild(d);}
   msgs.appendChild(row);
   if(!userScrolledUp)msgs.scrollTop=msgs.scrollHeight;
   if(!skipSave)saveHistory();
