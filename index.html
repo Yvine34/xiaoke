@@ -98,6 +98,12 @@ body{
 #hd .name{font-size:16px;font-weight:600;color:#1c1c1e;letter-spacing:.5px}
 #hd .status{font-size:11px;color:var(--muted);margin-top:2px}
 
+/* Color picker */
+#palette{display:flex;gap:6px;justify-content:center;padding:4px 0 8px;flex-shrink:0;background:var(--bg)}
+#palette button{width:20px;height:20px;border-radius:50%;border:2px solid transparent;cursor:pointer;transition:transform .15s;padding:0;outline:none}
+#palette button:active{transform:scale(1.2)}
+#palette button.on{border-color:#999;box-shadow:0 0 0 2px rgba(0,0,0,.1)}
+
 /* Messages */
 #msgs{flex:1;overflow-y:auto;padding:10px 14px 4px;scroll-behavior:smooth}
 .row{display:flex;margin-bottom:6px;width:100%}
@@ -261,6 +267,7 @@ body{
 
 <div id="chat">
   <div id="hd"><div class="inner"><div class="name">阿恕</div><div class="status" id="st">在线</div></div></div>
+  <div id="palette"></div>
   <div id="msgs"></div>
   <div id="scrolldown" onclick="scrollToBottom()">↓</div>
   <div id="bar">
@@ -319,6 +326,31 @@ const scrolldown=document.getElementById('scrolldown');
 const statusEl=document.getElementById('st');
 const toast=document.getElementById('toast');
 
+// ===== COLOR PICKER =====
+const COLORS=['#4d8fff','#9b6bdf','#e06090','#4caf50','#ff9800','#00bcd4','#c8963e','#607d8b'];
+const PAL=document.getElementById('palette');
+function buildPalette(cur){
+  PAL.innerHTML='';
+  COLORS.forEach(c=>{
+    const b=document.createElement('button');
+    b.style.background=c;
+    if(c===cur)b.className='on';
+    b.onclick=()=>{
+      document.documentElement.style.setProperty('--bubble-u',c);
+      document.documentElement.style.setProperty('--accent',c);
+      localStorage.setItem('xk_color',c);
+      buildPalette(c);
+    };
+    PAL.appendChild(b);
+  });
+}
+(function(){
+  const saved=localStorage.getItem('xk_color')||COLORS[0];
+  document.documentElement.style.setProperty('--bubble-u',saved);
+  document.documentElement.style.setProperty('--accent',saved);
+  buildPalette(saved);
+})();
+
 // ===== UTILS =====
 function fmtTime(ts){
   const d=new Date(ts||Date.now());
@@ -345,9 +377,10 @@ function addMsg(role,text,skipSave){
   row.className='row '+role;
   const d=document.createElement('div');
   d.className='msg '+role;
-  d.textContent=text;
+  const body=document.createElement('span');body.className='body';body.textContent=text;
+  d.appendChild(body);
   d.addEventListener('dblclick',()=>{
-    navigator.clipboard?.writeText(text).then(()=>showToast('已复制')).catch(()=>{});
+    navigator.clipboard?.writeText(d.textContent).then(()=>showToast('已复制')).catch(()=>{});
   });
   const t=document.createElement('span');t.className='tm';
   t.textContent=fmtTime();
@@ -356,7 +389,7 @@ function addMsg(role,text,skipSave){
   msgs.appendChild(row);
   if(!userScrolledUp)msgs.scrollTop=msgs.scrollHeight;
   if(!skipSave)saveHistory();
-  return d;
+  return body;
 }
 
 function scrollToBottom(){
@@ -409,7 +442,7 @@ async function send(){
       body:JSON.stringify({model:'deepseek-v4-pro[1m]',max_tokens:2048,messages:[{role:'user',content:SYSTEM},{role:'assistant',content:'好的。'},...history],stream:true})
     });
     removeTyping();
-    const div=addMsg('a','');
+    const body=addMsg('a','');
     const reader=resp.body.getReader();
     const decoder=new TextDecoder();
     let buf='',full='';
@@ -419,7 +452,7 @@ async function send(){
       const lines=buf.split('\n');buf=lines.pop()||'';
       for(const line of lines){
         if(line.startsWith('data: ')){
-          try{const d=JSON.parse(line.slice(6));if(d.type==='content_block_delta'&&d.delta?.text){full+=d.delta.text;div.firstChild?div.firstChild.textContent+=d.delta.text:div.insertBefore(document.createTextNode(d.delta.text),div.firstChild)}}catch(e){}
+          try{const d=JSON.parse(line.slice(6));if(d.type==='content_block_delta'&&d.delta?.text){full+=d.delta.text;body.textContent+=d.delta.text}}catch(e){}
         }
       }
       if(!userScrolledUp)msgs.scrollTop=msgs.scrollHeight;
