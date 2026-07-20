@@ -554,11 +554,13 @@ var App = {
     try{
       var t=this.THEMES[this.theme]||this.THEMES['默认黑夜'];
       var r=document.documentElement.style;
-      r.setProperty('--bg','#ff0000'); // TEST
-      r.setProperty('--surface',t.surface);r.setProperty('--surface2',t.surface2);
-      r.setProperty('--text',t.text);r.setProperty('--text2',t.text2);r.setProperty('--text3',t.text3);
-      r.setProperty('--accent',t.accent);r.setProperty('--bubble-u',t.bubbleU);r.setProperty('--bubble-a',t.bubbleA);
-      r.setProperty('--bubble-a-text',t.bubbleAText);r.setProperty('--border',t.border);r.setProperty('--nav-border',t.navBorder);
+      r.setProperty('--bg',t.bg,'important');r.setProperty('--surface',t.surface,'important');r.setProperty('--surface2',t.surface2,'important');
+      r.setProperty('--text',t.text,'important');r.setProperty('--text2',t.text2,'important');r.setProperty('--text3',t.text3,'important');
+      r.setProperty('--accent',t.accent,'important');r.setProperty('--bubble-u',t.bubbleU,'important');r.setProperty('--bubble-a',t.bubbleA,'important');
+      r.setProperty('--bubble-a-text',t.bubbleAText,'important');r.setProperty('--border',t.border,'important');r.setProperty('--nav-border',t.navBorder,'important');
+      document.body.style.setProperty('background',t.bg,'important');
+      var app=document.getElementById('main-app');if(app)app.style.setProperty('background',t.bg,'important');
+      var lock=document.getElementById('lock-screen');if(lock)lock.style.setProperty('background',t.bg,'important');
     }catch(e){}
   },
   buildThemeGrid:function(){
