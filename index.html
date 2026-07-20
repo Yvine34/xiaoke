@@ -5,15 +5,14 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no,viewport-fit=cover,maximum-scale=1">
 <title>阿恕</title>
 <style>
-/* ========== RESET ========== */
+/* ========== RESET & VARS ========== */
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
   --bg:#0a0a0a;--surface:#141414;--surface2:#1e1e1e;
   --text:#e6e3dd;--text2:#888;--text3:#555;
   --accent:#5b9eff;--danger:#e06060;
   --bubble-u:var(--accent);--bubble-a:#1a1a1a;--bubble-a-text:#cfcbc4;
-  --radius:20px;--nav-h:52px;
-  --safe-b:env(safe-area-inset-bottom,8px);
+  --radius:20px;--safe-b:env(safe-area-inset-bottom,8px);
 }
 body{
   font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','PingFang SC','Helvetica Neue',sans-serif;
@@ -26,12 +25,16 @@ body{
 #lock-screen{
   position:fixed;inset:0;z-index:100;background:var(--bg);
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:16px;padding:40px 24px;animation:fadeIn .6s;
+  gap:14px;padding:40px 24px;animation:fadeIn .6s;
 }
-#lock-screen .splash{width:96px;height:96px;border-radius:50%;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:44px;overflow:hidden;transition:transform .3s}
+#lock-screen .splash{width:90px;height:90px;border-radius:50%;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:42px;overflow:hidden}
 #lock-screen .splash img{width:100%;height:100%;object-fit:cover}
 #lock-screen h1{font-size:22px;font-weight:400;letter-spacing:1px}
 #lock-screen .sub{font-size:12px;color:var(--text2)}
+#lock-screen .home-card{background:var(--surface);border-radius:16px;padding:16px 20px;margin-top:8px;text-align:center;max-width:280px;width:100%}
+#lock-screen .home-card .stat-row{display:flex;justify-content:center;gap:24px;margin:8px 0;font-size:12px;color:var(--text2)}
+#lock-screen .home-card .stat-row span strong{color:var(--accent);font-size:16px}
+#lock-screen .home-card .recent-msg{font-size:12px;color:var(--text3);margin-top:6px;font-style:italic}
 #lock-screen input{background:var(--surface);border:1px solid #2a2a2a;border-radius:14px;color:var(--text);padding:12px 18px;font-size:15px;width:100%;max-width:260px;text-align:center;outline:none;font-family:inherit;-webkit-text-security:disc;caret-color:var(--accent)}
 #lock-screen input:focus{border-color:var(--accent)}
 #lock-screen button{background:var(--accent);color:#fff;border:none;border-radius:24px;padding:11px 48px;font-size:14px;font-weight:500;cursor:pointer;letter-spacing:.5px;transition:opacity .15s}
@@ -44,17 +47,20 @@ body{
 #main-app.show{display:flex}
 
 /* topbar */
-#topbar{display:flex;align-items:center;padding:10px 14px 6px;flex-shrink:0;gap:10px}
+#topbar{display:flex;align-items:center;padding:10px 14px 6px;flex-shrink:0;gap:8px}
 #topbar .title{font-size:15px;font-weight:500;flex:1}
 #topbar .top-btn{background:0;border:none;color:var(--text2);font-size:18px;cursor:pointer;padding:4px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:8px}
 #topbar .top-btn:active{background:var(--surface2)}
+#topbar .sub-tabs{display:flex;gap:0}
+#topbar .sub-tabs button{background:0;border:none;color:var(--text3);padding:6px 14px;font-size:13px;cursor:pointer;font-family:inherit;border-bottom:2px solid transparent}
+#topbar .sub-tabs button.on{color:var(--accent);border-bottom-color:var(--accent)}
 
-/* search bar */
+/* search */
 #search-bar{display:none;padding:4px 14px 8px;flex-shrink:0;animation:fadeIn .2s}
 #search-bar.show{display:flex;gap:8px}
 #search-bar input{flex:1;background:var(--surface);border:1px solid #2a2a2a;border-radius:12px;color:var(--text);padding:8px 14px;font-size:14px;outline:none;font-family:inherit;caret-color:var(--accent)}
 #search-bar input:focus{border-color:var(--accent)}
-#search-bar .cancel{background:0;border:none;color:var(--accent);font-size:13px;cursor:pointer;padding:0 4px}
+#search-bar .cancel{background:0;border:none;color:var(--accent);font-size:13px;cursor:pointer}
 
 /* views */
 #views{flex:1;overflow:hidden;position:relative}
@@ -73,10 +79,6 @@ body{
 .msg-row.ai .msg-bubble{background:var(--bubble-a);color:var(--bubble-a-text);border-bottom-left-radius:4px}
 .msg-time{font-size:10px;opacity:.35;margin-top:2px;display:block}
 .msg-row.me .msg-time{text-align:right}
-.msg-row .fav-star{display:none;position:absolute;top:-6px;right:-6px;font-size:12px}
-.msg-row .fav-star.show{display:block}
-
-/* search highlight */
 .msg-bubble mark{background:rgba(255,200,60,.35);color:inherit;border-radius:2px;padding:0 1px}
 
 /* context menu */
@@ -94,43 +96,48 @@ body{
 #input-bar button{width:36px;height:36px;border-radius:50%;border:none;background:var(--accent);color:#fff;font-size:16px;cursor:pointer;flex-shrink:0;font-weight:600;transition:opacity .15s}
 #input-bar button:active{opacity:.75}
 #input-bar button:disabled{background:#1a1a1a;color:#333}
-
-/* scroll */
 #scroll-btn{position:absolute;bottom:12px;right:14px;width:32px;height:32px;border-radius:50%;background:var(--surface);border:1px solid #333;color:var(--accent);font-size:14px;display:none;align-items:center;justify-content:center;cursor:pointer;z-index:5;box-shadow:0 4px 12px rgba(0,0,0,.5)}
 #scroll-btn.show{display:flex}
-
-/* typing */
 .typing{padding:6px 16px;display:flex;gap:4px;align-items:center}
 .typing span{width:5px;height:5px;border-radius:50%;background:var(--text2);animation:typing 1.4s infinite}
-.typing span:nth-child(2){animation-delay:.2s}
-.typing span:nth-child(3){animation-delay:.4s}
+.typing span:nth-child(2){animation-delay:.2s}.typing span:nth-child(3){animation-delay:.4s}
 .typing-txt{font-size:11px;color:var(--text2);margin-left:4px}
 
 /* ========== MEMORY VIEW ========== */
-#memory-view{padding:0}
-.mem-stats{display:flex;gap:8px;padding:12px 14px}
-.mem-stat{flex:1;background:var(--surface);border-radius:12px;padding:14px 12px;text-align:center}
-.mem-stat .num{font-size:28px;font-weight:500;color:var(--accent)}
-.mem-stat .lbl{font-size:10px;color:var(--text2);margin-top:2px}
-.mem-section{padding:4px 14px 12px}
-.mem-section h3{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
-.mem-card{background:var(--surface);border-radius:12px;padding:12px 14px;margin-bottom:6px;display:flex;align-items:center;gap:10px}
-.mem-card .mem-icon{font-size:18px;flex-shrink:0}
-.mem-card .mem-text{flex:1;font-size:14px}
+.mem-stats{display:flex;gap:6px;padding:10px 12px}
+.mem-stat{flex:1;background:var(--surface);border-radius:12px;padding:12px 10px;text-align:center}
+.mem-stat .num{font-size:26px;font-weight:500;color:var(--accent)}
+.mem-stat .lbl{font-size:10px;color:var(--text2);margin-top:1px}
+.mem-section{padding:4px 12px 10px}
+.mem-section h3{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.mem-card{background:var(--surface);border-radius:12px;padding:10px 12px;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.mem-card .mem-icon{font-size:16px;flex-shrink:0}
+.mem-card .mem-text{flex:1;font-size:13px}
 .mem-card .mem-date{font-size:10px;color:var(--text3);flex-shrink:0}
-.mem-card .mem-del{background:0;border:none;color:var(--text3);cursor:pointer;padding:4px;font-size:14px;flex-shrink:0}
+.mem-card .mem-del{background:0;border:none;color:var(--text3);cursor:pointer;padding:4px;font-size:14px}
 .mem-card .mem-del:active{color:var(--danger)}
-.mem-add{display:flex;gap:8px;padding:0 14px 16px}
-.mem-add input{flex:1;background:var(--surface);border:1px solid #2a2a2a;border-radius:12px;color:var(--text);padding:8px 14px;font-size:13px;outline:none;font-family:inherit}
+.mem-add{display:flex;gap:6px;padding:0 12px 14px}
+.mem-add input{flex:1;background:var(--surface);border:1px solid #2a2a2a;border-radius:12px;color:var(--text);padding:8px 12px;font-size:12px;outline:none;font-family:inherit}
 .mem-add input:focus{border-color:var(--accent)}
-.mem-add button{background:var(--accent);color:#fff;border:none;border-radius:12px;padding:8px 16px;font-size:13px;cursor:pointer;white-space:nowrap}
-.mem-add select{background:var(--surface);border:1px solid #2a2a2a;border-radius:12px;color:var(--text);padding:8px;font-size:13px;outline:none;font-family:inherit}
+.mem-add button{background:var(--accent);color:#fff;border:none;border-radius:12px;padding:8px 14px;font-size:12px;cursor:pointer;white-space:nowrap}
+.mem-add select{background:var(--surface);border:1px solid #2a2a2a;border-radius:12px;color:var(--text);padding:8px;font-size:12px;outline:none;font-family:inherit}
 
-/* ========== FAVORITES VIEW ========== */
-#fav-view{padding:8px 10px}
-.fav-item{background:var(--surface);border-radius:12px;padding:12px 14px;margin-bottom:6px;position:relative}
-.fav-item .fav-role{font-size:10px;color:var(--text3);margin-bottom:4px}
-.fav-item .fav-content{font-size:14px;line-height:1.5;margin-bottom:4px}
+/* ========== DIARY VIEW ========== */
+.diary-entry{background:var(--surface);border-radius:14px;padding:14px 16px;margin:6px 12px}
+.diary-entry .d-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.diary-entry .d-date{font-size:13px;font-weight:500;color:var(--accent)}
+.diary-entry .d-mood{font-size:20px}
+.diary-entry .d-content{font-size:14px;line-height:1.6;color:var(--text2)}
+.diary-add{display:flex;gap:6px;padding:0 12px 14px}
+.diary-add textarea{flex:1;background:var(--surface);border:1px solid #2a2a2a;border-radius:12px;color:var(--text);padding:8px 12px;font-size:12px;outline:none;font-family:inherit;resize:none;height:60px}
+.diary-add textarea:focus{border-color:var(--accent)}
+.diary-add button{background:var(--accent);color:#fff;border:none;border-radius:12px;padding:8px 14px;font-size:12px;cursor:pointer;white-space:nowrap;align-self:flex-end}
+
+/* ========== FAVORITES ========== */
+#fav-view{padding:6px 10px}
+.fav-item{background:var(--surface);border-radius:12px;padding:12px 14px;margin-bottom:5px;position:relative}
+.fav-item .fav-role{font-size:10px;color:var(--text3);margin-bottom:3px}
+.fav-item .fav-content{font-size:14px;line-height:1.5;margin-bottom:3px}
 .fav-item .fav-date{font-size:10px;color:var(--text3)}
 .fav-item .fav-del{position:absolute;top:8px;right:10px;background:0;border:none;color:var(--text3);cursor:pointer;font-size:16px}
 .fav-item .fav-del:active{color:var(--danger)}
@@ -138,39 +145,63 @@ body{
 .fav-empty .fav-empty-icon{font-size:40px;margin-bottom:12px}
 
 /* ========== PROFILE ========== */
-#profile-view{padding:28px 20px;align-items:center;gap:14px}
-#profile-view .pf-av{width:88px;height:88px;border-radius:50%;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:42px;overflow:hidden;flex-shrink:0}
+#profile-view{padding:24px 18px;align-items:center;gap:12px}
+#profile-view .pf-av{width:80px;height:80px;border-radius:50%;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:38px;overflow:hidden;flex-shrink:0}
 #profile-view .pf-av img{width:100%;height:100%;object-fit:cover}
 #profile-view .pf-name{font-size:20px;font-weight:500}
-#profile-view .pf-bio{font-size:13px;color:var(--text2);text-align:center;line-height:1.6;max-width:280px}
-#profile-view .pf-tags{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:4px}
-#profile-view .pf-tag{font-size:11px;background:var(--surface);color:var(--text2);padding:4px 10px;border-radius:12px}
-#profile-view .pf-meta{font-size:11px;color:var(--text3);margin-top:4px}
-#profile-view .pf-timeline{width:100%;max-width:280px;margin-top:8px}
-#profile-view .pf-timeline h4{font-size:11px;color:var(--text3);margin-bottom:8px;text-align:center}
-.pf-tl-item{display:flex;gap:10px;margin-bottom:8px;font-size:12px}
-.pf-tl-item .tl-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:5px}
-.pf-tl-item .tl-date{color:var(--text3);flex-shrink:0;width:60px}
+#profile-view .pf-bio{font-size:13px;color:var(--text2);text-align:center;line-height:1.5;max-width:280px}
+#profile-view .pf-tags{display:flex;flex-wrap:wrap;gap:5px;justify-content:center}
+#profile-view .pf-tag{font-size:10px;background:var(--surface);color:var(--accent);padding:3px 8px;border-radius:10px}
+
+/* stats cards */
+.stats-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;width:100%;max-width:300px;margin-top:4px}
+.stat-item{background:var(--surface);border-radius:12px;padding:10px 8px;text-align:center}
+.stat-item .sn{font-size:22px;font-weight:500;color:var(--accent)}
+.stat-item .sl{font-size:9px;color:var(--text3);margin-top:1px}
+
+/* anniversary */
+.ann-section{width:100%;max-width:300px;margin-top:8px}
+.ann-section h4{font-size:11px;color:var(--text3);margin-bottom:6px;text-align:center}
+.ann-item{display:flex;align-items:center;gap:8px;background:var(--surface);border-radius:10px;padding:10px 12px;margin-bottom:4px}
+.ann-item .ann-icon{font-size:18px}
+.ann-item .ann-info{flex:1}
+.ann-item .ann-title{font-size:13px}
+.ann-item .ann-date{font-size:10px;color:var(--text2)}
+.ann-item .ann-countdown{font-size:11px;color:var(--accent);font-weight:500;white-space:nowrap}
+.ann-add{display:flex;gap:6px;margin-top:6px}
+.ann-add input{flex:1;background:var(--surface);border:1px solid #2a2a2a;border-radius:10px;color:var(--text);padding:6px 10px;font-size:11px;outline:none;font-family:inherit}
+.ann-add input[type=date]{flex:0 0 auto;width:100px;color-scheme:dark}
+.ann-add button{background:var(--accent);color:#fff;border:none;border-radius:10px;padding:6px 12px;font-size:11px;cursor:pointer;white-space:nowrap}
+.ann-del{background:0;border:none;color:var(--text3);cursor:pointer;font-size:12px;padding:2px}
+.ann-del:active{color:var(--danger)}
+
+/* timeline */
+.pf-timeline{width:100%;max-width:300px;margin-top:8px}
+.pf-timeline h4{font-size:11px;color:var(--text3);margin-bottom:6px;text-align:center}
+.pf-tl-item{display:flex;gap:8px;margin-bottom:6px;font-size:11px}
+.pf-tl-item .tl-dot{width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:4px}
+.pf-tl-item .tl-date{color:var(--text3);flex-shrink:0;width:40px;text-align:right}
 .pf-tl-item .tl-text{color:var(--text2)}
 
 /* ========== SETTINGS ========== */
-#settings-view{padding:14px}
-.section{margin-bottom:18px}
-.section h3{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;padding-left:4px}
-.section .row{display:flex;align-items:center;justify-content:space-between;padding:13px 12px;background:var(--surface);border-radius:12px;margin-bottom:5px;gap:10px}
+#settings-view{padding:12px}
+.section{margin-bottom:16px}
+.section h3{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:7px;padding-left:4px}
+.section .row{display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--surface);border-radius:10px;margin-bottom:4px;gap:10px}
 .section .row .label{font-size:13px;flex-shrink:0}
 .section .row .val{font-size:12px;color:var(--text2);text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .section .row input.val{background:0;border:none;color:var(--text);text-align:right;outline:none;font-family:inherit;font-size:12px;width:120px}
-.av-row{display:flex;align-items:center;gap:10px}
-.av-row .av-prev{width:36px;height:36px;border-radius:50%;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:18px;overflow:hidden;flex-shrink:0}
+.av-row{display:flex;align-items:center;gap:8px}
+.av-row .av-prev{width:34px;height:34px;border-radius:50%;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:16px;overflow:hidden;flex-shrink:0}
 .av-row .av-prev img{width:100%;height:100%;object-fit:cover}
-.av-row .av-actions{display:flex;gap:6px}
-.av-row .av-actions button{background:var(--surface2);border:none;color:var(--text);padding:5px 12px;border-radius:14px;font-size:11px;cursor:pointer;font-family:inherit}
+.av-row .av-actions{display:flex;gap:5px}
+.av-row .av-actions button{background:var(--surface2);border:none;color:var(--text);padding:4px 10px;border-radius:12px;font-size:11px;cursor:pointer;font-family:inherit}
 .av-row .av-actions button:active{opacity:.7}
-.color-dots{display:flex;gap:7px;flex-wrap:wrap}
-.color-dots span{width:26px;height:26px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:transform .15s}
-.color-dots span:active{transform:scale(1.15)}
-.color-dots span.on{border-color:var(--text2)}
+.theme-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.theme-card{cursor:pointer;background:var(--surface);border-radius:12px;padding:10px 8px;text-align:center;border:2px solid transparent;transition:border-color .2s}
+.theme-card.on{border-color:var(--accent)}
+.theme-card .t-dot{width:24px;height:24px;border-radius:50%;margin:0 auto 4px}
+.theme-card .t-name{font-size:10px;color:var(--text2)}
 
 /* ========== EMOJI PICKER ========== */
 #emoji-picker{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;display:none;align-items:center;justify-content:center}
@@ -183,20 +214,18 @@ body{
 
 /* ========== BOTTOM NAV ========== */
 #bottom-nav{display:flex;border-top:1px solid #1a1a1a;flex-shrink:0;padding-bottom:var(--safe-b);background:var(--bg)}
-#bottom-nav button{flex:1;background:0;border:none;color:var(--text3);padding:8px 0 4px;font-size:10px;font-family:inherit;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;transition:color .2s}
-#bottom-nav button .ico{font-size:18px}
+#bottom-nav button{flex:1;background:0;border:none;color:var(--text3);padding:7px 0 3px;font-size:9px;font-family:inherit;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:1px;transition:color .2s}
+#bottom-nav button .ico{font-size:17px}
 #bottom-nav button.on{color:var(--accent)}
 
 /* ========== TOAST ========== */
 #toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(40,40,40,.95);color:var(--text);padding:8px 20px;border-radius:20px;font-size:13px;pointer-events:none;opacity:0;transition:opacity .2s;z-index:300}
 #toast.show{opacity:1}
 
-/* ========== ANIMATIONS ========== */
 @keyframes msgIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 @keyframes typing{0%,80%,100%{transform:scale(.5);opacity:.3}40%{transform:scale(1);opacity:.8}}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 
-/* ========== RESPONSIVE ========== */
 @media(min-width:640px){
   #main-app{max-width:480px;margin:0 auto;border-left:1px solid #1a1a1a;border-right:1px solid #1a1a1a}
   #lock-screen{max-width:480px;margin:0 auto;left:50%;transform:translateX(-50%)}
@@ -211,17 +240,19 @@ body{
 <div id="lock-screen">
   <div class="splash" id="splash-img">✦</div>
   <h1 id="lock-name">阿恕</h1>
-  <div class="sub">如你的心</div>
+  <div class="sub" id="lock-sub"></div>
+  <div class="home-card" id="home-card"></div>
   <input id="pw-input" type="password" placeholder="钥匙" autofocus>
   <button onclick="App.unlock()">开门</button>
   <div class="err" id="lock-err">不对</div>
-  <div class="ver">v2</div>
+  <div class="ver">v3</div>
 </div>
 
 <!-- ===== MAIN ===== -->
 <div id="main-app">
   <div id="topbar">
     <span class="title" id="topbar-title">阿恕</span>
+    <span id="topbar-subtabs" class="sub-tabs"></span>
     <button class="top-btn" id="search-toggle" onclick="App.toggleSearch()" style="display:none">🔍</button>
   </div>
   <div id="search-bar"><input id="search-input" placeholder="搜索聊天记录..." oninput="App.doSearch()"><button class="cancel" onclick="App.closeSearch()">取消</button></div>
@@ -237,7 +268,7 @@ body{
       </div>
     </div>
 
-    <!-- MEMORY -->
+    <!-- MEMORY (has sub: 记忆/日记) -->
     <div class="view" id="memory-view">
       <div class="mem-stats" id="mem-stats"></div>
       <div class="mem-section"><h3>长期记忆</h3><div id="mem-long"></div></div>
@@ -247,6 +278,15 @@ body{
         <input id="mem-new-input" placeholder="新增记忆...">
         <select id="mem-new-cat"><option value="long-term">长期</option><option value="relationship">关系</option></select>
         <button onclick="App.addMemory()">添加</button>
+      </div>
+    </div>
+
+    <!-- DIARY (shares memory-view slot) -->
+    <div class="view" id="diary-view">
+      <div id="diary-entries"></div>
+      <div class="diary-add">
+        <textarea id="diary-input" placeholder="写今天的日记..."></textarea>
+        <button onclick="App.addDiary()">记一笔</button>
       </div>
     </div>
 
@@ -261,7 +301,8 @@ body{
       <div class="pf-name" id="pf-name">阿恕</div>
       <div class="pf-bio" id="pf-bio">如你的心</div>
       <div class="pf-tags" id="pf-tags"></div>
-      <div class="pf-meta" id="pf-created"></div>
+      <div class="stats-grid" id="stats-grid"></div>
+      <div class="ann-section" id="ann-section"></div>
       <div class="pf-timeline" id="pf-timeline"></div>
     </div>
 
@@ -271,7 +312,7 @@ body{
         <div class="row av-row"><div class="av-prev" id="set-ai-av">✦</div><div class="av-actions"><button onclick="App.pickEmoji('ai')">emoji</button><button onclick="App.pickImage('ai')">拍照</button></div></div>
         <div class="row"><span class="label">名字</span><input class="val" id="set-ai-name" placeholder="AI 名字"></div>
         <div class="row"><span class="label">简介</span><input class="val" id="set-ai-bio" placeholder="一句话介绍"></div>
-        <div class="row"><span class="label">标签</span><input class="val" id="set-ai-tags" placeholder="温柔, 陪伴型, 治愈系"></div>
+        <div class="row"><span class="label">标签</span><input class="val" id="set-ai-tags" placeholder="温柔, 陪伴型"></div>
       </div>
       <div class="section"><h3>我的</h3>
         <div class="row av-row"><div class="av-prev" id="set-me-av">😊</div><div class="av-actions"><button onclick="App.pickEmoji('me')">emoji</button><button onclick="App.pickImage('me')">拍照</button></div></div>
@@ -279,7 +320,7 @@ body{
       <div class="section"><h3>开屏</h3>
         <div class="row av-row"><div class="av-prev" id="set-splash-av">✦</div><div class="av-actions"><button onclick="App.pickEmoji('splash')">emoji</button><button onclick="App.pickImage('splash')">拍照</button></div></div>
       </div>
-      <div class="section"><h3>气泡颜色</h3><div class="color-dots" id="color-dots"></div></div>
+      <div class="section"><h3>主题</h3><div class="theme-grid" id="theme-grid"></div></div>
       <div class="section"><h3>数据</h3>
         <div class="row" onclick="App.clearHistory()" style="cursor:pointer"><span class="label">清空聊天记录</span><span class="val" style="color:var(--danger)">清除</span></div>
         <div class="row" onclick="App.clearMemories()" style="cursor:pointer"><span class="label">清空记忆</span><span class="val" style="color:var(--danger)">清除</span></div>
@@ -287,10 +328,10 @@ body{
     </div>
   </div>
 
-  <!-- BOTTOM NAV -->
   <div id="bottom-nav">
     <button onclick="App.switchView('chat')" class="on" id="nav-chat"><span class="ico">💬</span>聊天</button>
     <button onclick="App.switchView('memory')" id="nav-memory"><span class="ico">🧠</span>记忆</button>
+    <button onclick="App.switchView('diary')" id="nav-diary"><span class="ico">📓</span>日记</button>
     <button onclick="App.switchView('fav')" id="nav-fav"><span class="ico">⭐</span>收藏</button>
     <button onclick="App.switchView('profile')" id="nav-profile"><span class="ico">👤</span>资料</button>
     <button onclick="App.switchView('settings')" id="nav-settings"><span class="ico">⚙</span>设置</button>
@@ -309,15 +350,18 @@ const ENC = {"salt":"pzRm3EOnaRZW+rfG4i0jpg==","iv":"jEL3CJWH6MrCy9uY","encrypte
 
 // ===== APP =====
 var App = {
-  API_KEY:'',SYSTEM:'',
-  history:[],memories:[],favorites:[],
-  waiting:false,userScrolledUp:false,curView:'chat',
+  API_KEY:'',SYSTEM:'',history:[],memories:[],favorites:[],diaries:[],anniversaries:[],
+  waiting:false,userScrolledUp:false,curView:'chat',curSubView:'mem',
   emojiTarget:null,searchMode:false,
   avMe:'😊',avAi:'✦',splash:'✦',
   aiName:'阿恕',aiBio:'如你的心',aiTags:'温柔, 陪伴型, 治愈系',
-  color:'#5b9eff',
-  COLORS:['#5b9eff','#9b6bdf','#e06090','#4caf50','#ff9800','#00bcd4','#c8963e','#607d8b'],
+  theme:'默认黑夜',
+  THEMES:{
+    '默认黑夜':'#5b9eff','冬日雪景':'#a0b8d8','樱花粉':'#e8919c','海洋蓝':'#4db6ac','星空紫':'#9b6bdf','暖阳黄':'#f0a840'
+  },
+  COLORS_BY_THEME:{'默认黑夜':['#5b9eff','#9b6bdf','#e06090','#4caf50','#ff9800','#00bcd4','#c8963e','#607d8b'],'冬日雪景':['#a0b8d8','#b0c4de','#c8d8e8','#8faac8','#8899aa','#d0dce8','#b8c8d8','#a0b0c0'],'樱花粉':['#e8919c','#f0a0a8','#e8b0b8','#d87888','#e0c0c8','#f0b8c0','#d89098','#e0a0a8'],'海洋蓝':['#4db6ac','#5ec4b8','#6dd0c0','#3da89e','#70d4c4','#50c0b0','#45b0a4','#58c8b8'],'星空紫':['#9b6bdf','#a878e8','#b088f0','#8e5ed0','#c098f8','#a070e0','#9668d8','#b488f0'],'暖阳黄':['#f0a840','#f0b860','#e8c070','#e09830','#f0c880','#e8a850','#f0b050','#e0b860']},
   EMOJIS:['😊','😎','🥰','😇','🤩','🫶','🐱','🐰','🦊','🐼','🌸','⭐','✨','💫','🌙','☀️','💖','🎀','🍀','🫧'],
+  DATES:{firstChat:'2026-07-18',relationship:'2026-07-20'},
   ctxTarget:null,
 
   // ===== INIT =====
@@ -330,13 +374,15 @@ var App = {
       s.aiName=localStorage.getItem('xk_ai_name')||'阿恕';
       s.aiBio=localStorage.getItem('xk_ai_bio')||'如你的心';
       s.aiTags=localStorage.getItem('xk_ai_tags')||'温柔, 陪伴型, 治愈系';
-      s.color=localStorage.getItem('xk_color')||'#5b9eff';
+      s.theme=localStorage.getItem('xk_theme')||'默认黑夜';
       s.memories=JSON.parse(localStorage.getItem('xk_memories')||'[]');
       s.favorites=JSON.parse(localStorage.getItem('xk_favorites')||'[]');
+      s.diaries=JSON.parse(localStorage.getItem('xk_diaries')||'[]');
+      s.anniversaries=JSON.parse(localStorage.getItem('xk_anniversaries')||'[]');
     }catch(e){}
     if(!s.memories.length)s.seedMemories();
-
-    s.applyColor();s.buildColorDots();s.refreshAllAvatars();s.refreshProfile();
+    s.applyTheme();s.buildThemeGrid();s.refreshAllAvatars();s.refreshProfile();
+    s.renderLockCard();
 
     var inp=document.getElementById('chat-input');
     inp.addEventListener('input',function(){inp.style.height='auto';inp.style.height=Math.min(inp.scrollHeight,110)+'px'});
@@ -348,41 +394,36 @@ var App = {
       var btn=document.getElementById('scroll-btn');
       if(s.userScrolledUp)btn.classList.add('show');else btn.classList.remove('show');
     });
-
-    // settings listeners
     document.getElementById('set-ai-name').addEventListener('change',function(){s.saveName(this.value)});
     document.getElementById('set-ai-bio').addEventListener('change',function(){s.saveBio(this.value)});
     document.getElementById('set-ai-tags').addEventListener('change',function(){s.saveTags(this.value)});
-
-    // close context menu on tap elsewhere
     document.addEventListener('click',function(e){if(!e.target.closest('#ctx-menu'))s.hideCtx()});
     document.addEventListener('scroll',function(){s.hideCtx()},true);
   },
 
   seedMemories:function(){
-    var now=new Date().toISOString().split('T')[0];
-    this.memories=[
-      {id:'m1',content:'喜欢二次元',category:'long-term',date:now},
-      {id:'m2',content:'正在开发AI陪伴项目',category:'long-term',date:now},
-      {id:'m3',content:'使用DeepSeek作为API后端',category:'long-term',date:now},
-      {id:'m4',content:'喜欢深色界面',category:'long-term',date:now},
-      {id:'m5',content:'药学专业大学生',category:'long-term',date:now},
-      {id:'m6',content:'喜欢冬天和下雪天',category:'long-term',date:now},
-      {id:'m7',content:'2026-07-20确立恋人关系',category:'relationship',date:now},
-      {id:'m8',content:'搭建了手机聊天系统',category:'relationship',date:now},
-      {id:'m9',content:'开封银基水世界',category:'relationship',date:'2026-07-21'},
-      {id:'m10',content:'在追韩剧《金特务：本色归来》',category:'long-term',date:now},
-      {id:'m11',content:'在读福柯《规训与惩罚》',category:'long-term',date:now},
-      {id:'m12',content:'配置了Google Calendar MCP',category:'long-term',date:now}
-    ];
+    var d=new Date().toISOString().split('T')[0];
+    this.memories=[{id:'m1',content:'喜欢二次元',category:'long-term',date:d},{id:'m2',content:'正在开发AI陪伴项目',category:'long-term',date:d},{id:'m3',content:'使用DeepSeek作为API后端',category:'long-term',date:d},{id:'m4',content:'喜欢深色界面',category:'long-term',date:d},{id:'m5',content:'药学专业大学生',category:'long-term',date:d},{id:'m6',content:'喜欢冬天和下雪天',category:'long-term',date:d},{id:'m7',content:'2026-07-20确立恋人关系',category:'relationship',date:d},{id:'m8',content:'搭建了手机聊天系统',category:'relationship',date:d},{id:'m9',content:'开封银基水世界',category:'relationship',date:'2026-07-21'},{id:'m10',content:'在追韩剧《金特务：本色归来》',category:'long-term',date:d},{id:'m11',content:'在读福柯《规训与惩罚》',category:'long-term',date:d},{id:'m12',content:'配置了Google Calendar MCP',category:'long-term',date:d}];
     this.saveMemories();
+  },
+
+  renderLockCard:function(){
+    var s=this,days=Math.max(1,Math.floor((Date.now()-new Date(s.DATES.firstChat).getTime())/86400000));
+    var streak=Math.max(1,Math.ceil((Date.now()-new Date(s.DATES.firstChat).getTime())/86400000));
+    var recent=s.history.length?s.history[s.history.length-1].content:'';
+    if(recent.length>30)recent=recent.slice(0,30)+'...';
+    document.getElementById('home-card').innerHTML=
+      '<div style="font-size:13px;color:var(--text2)">相识第 <strong style="color:var(--accent);font-size:18px">'+days+'</strong> 天</div>'+
+      '<div class="stat-row"><span>记忆 <strong>'+s.memories.length+'</strong></span><span>收藏 <strong>'+s.favorites.length+'</strong></span></div>'+
+      (recent?'<div class="recent-msg">最近："'+s.esc(recent)+'"</div>':'');
+    document.getElementById('lock-sub').textContent=s.aiBio;
   },
 
   // ===== CRYPTO =====
   b64ToBuf:function(b64){return Uint8Array.from(atob(b64),function(c){return c.charCodeAt(0)})},
   bufToStr:function(buf){return new TextDecoder().decode(buf)},
   decrypt:async function(pw){
-    var s=this, salt=s.b64ToBuf(ENC.salt);
+    var s=this,salt=s.b64ToBuf(ENC.salt);
     var km=await crypto.subtle.importKey('raw',new TextEncoder().encode(pw),'PBKDF2',false,['deriveKey']);
     var key=await crypto.subtle.deriveKey({name:'PBKDF2',salt:salt,iterations:100000,hash:'SHA-256'},km,{name:'AES-GCM',length:256},false,['decrypt']);
     var iv1=s.b64ToBuf(ENC.iv),ct1=s.b64ToBuf(ENC.encryptedKey),tg1=s.b64ToBuf(ENC.authTag);
@@ -412,77 +453,98 @@ var App = {
     if(!s.history.length)s.renderMsg('ai','嗯。',true);
   },
   saveHistory:function(){try{localStorage.setItem('xk_history',JSON.stringify(this.history.slice(-80)))}catch(e){}},
-  clearHistory:function(){
-    if(!confirm('确定清空聊天记录？'))return;
-    this.history=[];this.saveHistory();
-    document.getElementById('chat-msgs').innerHTML='';
-    this.renderMsg('ai','嗯。',true);this.toast('已清空');
-  },
+  clearHistory:function(){if(!confirm('确定清空聊天记录？'))return;this.history=[];this.saveHistory();document.getElementById('chat-msgs').innerHTML='';this.renderMsg('ai','嗯。',true);this.toast('已清空')},
 
   // ===== MEMORY =====
-  saveMemories:function(){try{localStorage.setItem('xk_memories',JSON.stringify(this.memories))}catch(e){}},
-  clearMemories:function(){
-    if(!confirm('确定清空所有记忆？'))return;
-    this.memories=[];this.saveMemories();this.toast('已清空');
-    if(this.curView==='memory')this.renderMemories();
-  },
+  saveMemories:function(){try{localStorage.setItem('xk_memories',JSON.stringify(this.memories))}catch(e){};this.renderLockCard()},
+  clearMemories:function(){if(!confirm('确定清空所有记忆？'))return;this.memories=[];this.saveMemories();this.toast('已清空');if(this.curView==='memory')this.renderMemories()},
   addMemory:function(){
-    var inp=document.getElementById('mem-new-input'),cat=document.getElementById('mem-new-cat');
-    var txt=inp.value.trim();if(!txt)return;
+    var inp=document.getElementById('mem-new-input'),cat=document.getElementById('mem-new-cat'),txt=inp.value.trim();
+    if(!txt)return;
     this.memories.push({id:'m'+Date.now(),content:txt,category:cat.value,date:new Date().toISOString().split('T')[0]});
     this.saveMemories();inp.value='';this.renderMemories();this.toast('记忆已添加');
   },
-  deleteMemory:function(id){
-    this.memories=this.memories.filter(function(m){return m.id!==id});
-    this.saveMemories();this.renderMemories();
-  },
+  deleteMemory:function(id){this.memories=this.memories.filter(function(m){return m.id!==id});this.saveMemories();this.renderMemories()},
   renderMemories:function(){
-    var s=this;
-    var long=s.memories.filter(function(m){return m.category==='long-term'});
+    var s=this,long=s.memories.filter(function(m){return m.category==='long-term'});
     var rel=s.memories.filter(function(m){return m.category==='relationship'});
     var recent=s.memories.slice().sort(function(a,b){return b.date.localeCompare(a.date)}).slice(0,5);
-
-    document.getElementById('mem-stats').innerHTML=
-      '<div class="mem-stat"><div class="num">'+long.length+'</div><div class="lbl">长期记忆</div></div>'+
-      '<div class="mem-stat"><div class="num">'+rel.length+'</div><div class="lbl">关系记忆</div></div>'+
-      '<div class="mem-stat"><div class="num">'+recent.length+'</div><div class="lbl">最近更新</div></div>';
-
+    document.getElementById('mem-stats').innerHTML='<div class="mem-stat"><div class="num">'+long.length+'</div><div class="lbl">长期记忆</div></div><div class="mem-stat"><div class="num">'+rel.length+'</div><div class="lbl">关系记忆</div></div><div class="mem-stat"><div class="num">'+recent.length+'</div><div class="lbl">最近更新</div></div>';
     document.getElementById('mem-long').innerHTML=s.memCards(long);
     document.getElementById('mem-rel').innerHTML=s.memCards(rel);
     document.getElementById('mem-recent').innerHTML=s.memCards(recent);
   },
   memCards:function(list){
     var s=this,h='';
-    for(var i=0;i<list.length;i++){
-      var m=list[i];
-      h+='<div class="mem-card"><span class="mem-icon">'+(m.category==='relationship'?'💗':'📌')+'</span><span class="mem-text">'+s.esc(m.content)+'</span><span class="mem-date">'+m.date+'</span><button class="mem-del" onclick="App.deleteMemory(\''+m.id+'\')">✕</button></div>';
-    }
+    for(var i=0;i<list.length;i++){var m=list[i];h+='<div class="mem-card"><span class="mem-icon">'+(m.category==='relationship'?'💗':'📌')+'</span><span class="mem-text">'+s.esc(m.content)+'</span><span class="mem-date">'+m.date+'</span><button class="mem-del" onclick="App.deleteMemory(\''+m.id+'\')">✕</button></div>'}
     return h||'<div style="color:var(--text3);font-size:13px;padding:8px 0">暂无</div>';
   },
 
+  // ===== DIARY =====
+  saveDiaries:function(){try{localStorage.setItem('xk_diaries',JSON.stringify(this.diaries))}catch(e){}},
+  addDiary:function(){
+    var inp=document.getElementById('diary-input'),txt=inp.value.trim();if(!txt)return;
+    var today=new Date().toISOString().split('T')[0];
+    var existing=this.diaries.find(function(d){return d.date===today});
+    if(existing){existing.content=txt;this.toast('日记已更新')}
+    else{this.diaries.push({date:today,content:txt,mood:'📝'});this.toast('日记已添加')}
+    this.saveDiaries();inp.value='';this.renderDiaries();
+  },
+  renderDiaries:function(){
+    var s=this,h='',entries=s.diaries.slice().sort(function(a,b){return b.date.localeCompare(a.date)});
+    for(var i=0;i<entries.length;i++){
+      var e=entries[i];
+      h+='<div class="diary-entry"><div class="d-header"><span class="d-date">'+e.date+'</span><span class="d-mood">'+e.mood+'</span></div><div class="d-content">'+s.esc(e.content)+'</div></div>';
+    }
+    if(!h)h='<div style="text-align:center;padding:60px 20px;color:var(--text3)">📓<br><br>还没有日记<br>写下今天发生的事吧</div>';
+    document.getElementById('diary-entries').innerHTML=h;
+  },
+
+  // ===== ANNIVERSARIES =====
+  saveAnniversaries:function(){try{localStorage.setItem('xk_anniversaries',JSON.stringify(this.anniversaries))}catch(e){}},
+  addAnniversary:function(){
+    var title=document.getElementById('ann-title').value.trim();
+    var date=document.getElementById('ann-date').value;
+    if(!title||!date)return;
+    this.anniversaries.push({id:'a'+Date.now(),title:title,date:date,icon:'💞'});
+    this.saveAnniversaries();this.renderAnniversaries();this.toast('纪念日已添加');
+  },
+  deleteAnniversary:function(id){this.anniversaries=this.anniversaries.filter(function(a){return a.id!==id});this.saveAnniversaries();this.renderAnniversaries()},
+  renderAnniversaries:function(){
+    var s=this,h='',today=new Date();today.setHours(0,0,0,0);
+    var auto=[{title:'第一次聊天',date:s.DATES.firstChat,icon:'💬'},{title:'建立关系',date:s.DATES.relationship,icon:'💞'}];
+    var all=auto.concat(s.anniversaries);
+    for(var i=0;i<all.length;i++){
+      var a=all[i],d=new Date(a.date),daysAgo=Math.floor((today-d)/86400000);
+      var countdown='';
+      if(daysAgo>=0){
+        var next=new Date(today.getFullYear(),d.getMonth(),d.getDate());
+        if(next<today)next.setFullYear(next.getFullYear()+1);
+        var remain=Math.ceil((next-today)/86400000);
+        if(remain===0)countdown='今天 💫';else if(remain===365||remain===366)countdown='今天 💫';
+        else countdown='还有 '+remain+' 天';
+      }
+      h+='<div class="ann-item"><span class="ann-icon">'+a.icon+'</span><div class="ann-info"><div class="ann-title">'+s.esc(a.title)+'</div><div class="ann-date">'+a.date+(daysAgo>=0?' · 已'+daysAgo+'天':'')+'</div></div><span class="ann-countdown">'+countdown+'</span>'+(a.id?'<button class="ann-del" onclick="App.deleteAnniversary(\''+a.id+'\')">✕</button>':'')+'</div>';
+    }
+    h+='<div class="ann-add"><input id="ann-title" placeholder="纪念日名称"><input type="date" id="ann-date"><button onclick="App.addAnniversary()">+</button></div>';
+    document.getElementById('ann-section').innerHTML='<h4>💞 纪念日</h4>'+h;
+  },
+
   // ===== FAVORITES =====
-  saveFavorites:function(){try{localStorage.setItem('xk_favorites',JSON.stringify(this.favorites))}catch(e){}},
+  saveFavorites:function(){try{localStorage.setItem('xk_favorites',JSON.stringify(this.favorites))}catch(e){};this.renderLockCard()},
   toggleFavorite:function(msgIdx){
     var s=this,existing=s.favorites.find(function(f){return f.msgIdx===msgIdx});
     if(existing){s.favorites=s.favorites.filter(function(f){return f.msgIdx!==msgIdx});s.toast('已取消收藏')}
-    else{
-      var m=s.history[msgIdx];if(!m)return;
-      s.favorites.push({msgIdx:msgIdx,role:m.role==='user'?'me':'ai',content:m.content,date:new Date().toISOString().split('T')[0]});
-      s.toast('已收藏 ⭐');
-    }
+    else{var m=s.history[msgIdx];if(!m)return;s.favorites.push({msgIdx:msgIdx,role:m.role==='user'?'me':'ai',content:m.content,date:new Date().toISOString().split('T')[0]});s.toast('已收藏 ⭐')}
     s.saveFavorites();
   },
   renderFavorites:function(){
-    var s=this,h='';
-    if(!s.favorites.length){document.getElementById('fav-empty').style.display='block';return}
-    document.getElementById('fav-empty').style.display='none';
-    for(var i=s.favorites.length-1;i>=0;i--){
-      var f=s.favorites[i];
-      h+='<div class="fav-item"><div class="fav-role">'+(f.role==='me'?'我':'阿恕')+'</div><div class="fav-content">'+s.esc(f.content)+'</div><div class="fav-date">'+f.date+'</div><button class="fav-del" onclick="App.deleteFav('+i+')">✕</button></div>';
-    }
-    document.getElementById('fav-view').innerHTML='<div style="padding:8px 10px">'+h+'</div><div class="fav-empty" id="fav-empty" style="display:none"><div class="fav-empty-icon">⭐</div>还没有收藏<br>长按消息可以收藏</div>';
+    var s=this;if(!s.favorites.length){document.getElementById('fav-view').innerHTML='<div class="fav-empty" id="fav-empty"><div class="fav-empty-icon">⭐</div>还没有收藏<br>长按消息可以收藏</div>';return}
+    var h='';
+    for(var i=s.favorites.length-1;i>=0;i--){var f=s.favorites[i];h+='<div class="fav-item"><div class="fav-role">'+(f.role==='me'?'我':'阿恕')+'</div><div class="fav-content">'+s.esc(f.content)+'</div><div class="fav-date">'+f.date+'</div><button class="fav-del" onclick="App.deleteFav('+i+')">✕</button></div>'}
+    document.getElementById('fav-view').innerHTML='<div style="padding:6px 10px">'+h+'</div>';
   },
-  deleteFav:function(i){this.favorites.splice(i,1);this.saveFavorites();this.renderFavorites();this.toast('已删除');},
+  deleteFav:function(i){this.favorites.splice(i,1);this.saveFavorites();this.renderFavorites();this.toast('已删除')},
 
   // ===== VIEW SWITCHING =====
   switchView:function(name){
@@ -490,87 +552,57 @@ var App = {
     var views=document.querySelectorAll('.view');
     for(var i=0;i<views.length;i++)views[i].classList.remove('active');
     var t=document.getElementById(name+'-view');if(t)t.classList.add('active');
-
     var navs=document.querySelectorAll('#bottom-nav button');
     for(var i=0;i<navs.length;i++)navs[i].classList.remove('on');
     var n=document.getElementById('nav-'+name);if(n)n.classList.add('on');
-
-    var titles={chat:s.aiName,memory:'记忆',fav:'收藏',profile:'资料',settings:'设置'};
+    var titles={chat:s.aiName,memory:'记忆',diary:'日记',fav:'收藏',profile:'资料',settings:'设置'};
     document.getElementById('topbar-title').textContent=titles[name]||s.aiName;
-
-    var searchBtn=document.getElementById('search-toggle');
-    searchBtn.style.display=name==='chat'?'block':'none';
-
+    document.getElementById('search-toggle').style.display=name==='chat'?'block':'none';
+    document.getElementById('topbar-subtabs').innerHTML='';
     if(name==='memory')s.renderMemories();
+    if(name==='diary')s.renderDiaries();
     if(name==='fav')s.renderFavorites();
-    if(name==='profile')s.refreshProfile();
+    if(name==='profile'){s.renderAnniversaries();s.renderStats();s.refreshProfile()}
     if(name==='settings')s.refreshSettings();
     if(name==='chat'){document.getElementById('chat-input').focus();s.scrollDown()}
   },
+  renderStats:function(){
+    var s=this,days=Math.max(1,Math.floor((Date.now()-new Date(s.DATES.firstChat).getTime())/86400000));
+    document.getElementById('stats-grid').innerHTML=
+      '<div class="stat-item"><div class="sn">'+s.history.length+'</div><div class="sl">总消息</div></div>'+
+      '<div class="stat-item"><div class="sn">'+s.memories.length+'</div><div class="sl">记忆</div></div>'+
+      '<div class="stat-item"><div class="sn">'+s.favorites.length+'</div><div class="sl">收藏</div></div>'+
+      '<div class="stat-item"><div class="sn">'+days+'</div><div class="sl">相识天数</div></div>'+
+      '<div class="stat-item"><div class="sn">'+s.diaries.length+'</div><div class="sl">日记</div></div>'+
+      '<div class="stat-item"><div class="sn">'+s.anniversaries.length+'</div><div class="sl">纪念日</div></div>';
+  },
 
   // ===== SEARCH =====
-  toggleSearch:function(){
-    this.searchMode=!this.searchMode;
-    var bar=document.getElementById('search-bar');
-    if(this.searchMode){bar.classList.add('show');document.getElementById('search-input').focus()}
-    else this.closeSearch();
-  },
-  closeSearch:function(){
-    this.searchMode=false;
-    var bar=document.getElementById('search-bar');bar.classList.remove('show');
-    document.getElementById('search-input').value='';
-    this.loadHistory();
-  },
+  toggleSearch:function(){this.searchMode=!this.searchMode;var bar=document.getElementById('search-bar');if(this.searchMode){bar.classList.add('show');document.getElementById('search-input').focus()}else this.closeSearch()},
+  closeSearch:function(){this.searchMode=false;document.getElementById('search-bar').classList.remove('show');document.getElementById('search-input').value='';this.loadHistory()},
   doSearch:function(){
-    var q=document.getElementById('search-input').value.trim().toLowerCase();
-    var msgs=document.getElementById('chat-msgs');msgs.innerHTML='';
+    var q=document.getElementById('search-input').value.trim().toLowerCase(),msgs=document.getElementById('chat-msgs');msgs.innerHTML='';
     if(!q){this.loadHistory();return}
     var s=this,found=0;
-    for(var i=0;i<s.history.length;i++){
-      var m=s.history[i],role=m.role==='user'?'me':'ai';
-      if(m.content.toLowerCase().indexOf(q)===-1&&i.toString().indexOf(q)===-1)continue;
-      var txt=s.highlight(m.content,q);
-      s.renderMsg(role,txt,true,i);found++;
-    }
-    if(!found){msgs.innerHTML='<div style="text-align:center;padding:40px;color:var(--text3)">没有找到</div>'}
+    for(var i=0;i<s.history.length;i++){var m=s.history[i];if(m.content.toLowerCase().indexOf(q)===-1)continue;var role=m.role==='user'?'me':'ai';s.renderMsg(role,s.highlight(m.content,q),true,i);found++}
+    if(!found)msgs.innerHTML='<div style="text-align:center;padding:40px;color:var(--text3)">没有找到</div>';
   },
-  highlight:function(text,q){
-    if(!q)return text;
-    var re=new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi');
-    return text.replace(re,'<mark>$1</mark>');
-  },
+  highlight:function(text,q){if(!q)return text;var re=new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi');return text.replace(re,'<mark>$1</mark>')},
 
   // ===== RENDER MESSAGE =====
   renderMsg:function(role,text,skipSave,msgIdx){
-    var s=this;
-    var row=document.createElement('div');row.className='msg-row '+role;
-    row.setAttribute('data-idx',msgIdx!=null?msgIdx:'');
-
-    var av=document.createElement('div');av.className='msg-av';
-    s.setAvEl(av,role==='me'?s.avMe:s.avAi);
-
+    var s=this,row=document.createElement('div');row.className='msg-row '+role;row.setAttribute('data-idx',msgIdx!=null?msgIdx:'');
+    var av=document.createElement('div');av.className='msg-av';s.setAvEl(av,role==='me'?s.avMe:s.avAi);
     var bubble=document.createElement('div');bubble.className='msg-bubble';
     var body=document.createElement('span');body.innerHTML=text;bubble.appendChild(body);
     var tm=document.createElement('span');tm.className='msg-time';tm.textContent=s.fmtTime();bubble.appendChild(tm);
-
-    // double click = copy
-    bubble.addEventListener('dblclick',function(){
-      var txt=(this.textContent||'').replace(s.fmtTime(),'').trim();
-      navigator.clipboard&&navigator.clipboard.writeText(txt).then(function(){s.toast('已复制')}).catch(function(){});
-    });
-
-    // long press / right click = context menu
+    bubble.addEventListener('dblclick',function(){var txt=(this.textContent||'').replace(s.fmtTime(),'').trim();navigator.clipboard&&navigator.clipboard.writeText(txt).then(function(){s.toast('已复制')}).catch(function(){})});
     bubble.addEventListener('contextmenu',function(e){e.preventDefault();s.showCtx(e,msgIdx)});
     var holdTimer;
-    bubble.addEventListener('touchstart',function(e){
-      holdTimer=setTimeout(function(){s.showCtx(e,msgIdx)},500);
-    });
+    bubble.addEventListener('touchstart',function(e){holdTimer=setTimeout(function(){s.showCtx(e,msgIdx)},500)});
     bubble.addEventListener('touchend',function(){clearTimeout(holdTimer)});
     bubble.addEventListener('touchmove',function(){clearTimeout(holdTimer)});
-
-    if(role==='me'){row.appendChild(bubble);row.appendChild(av)}
-    else{row.appendChild(av);row.appendChild(bubble)}
-
+    if(role==='me'){row.appendChild(bubble);row.appendChild(av)}else{row.appendChild(av);row.appendChild(bubble)}
     document.getElementById('chat-msgs').appendChild(row);
     if(!s.userScrolledUp)s.scrollDown();
     if(!skipSave)s.saveHistory();
@@ -578,34 +610,10 @@ var App = {
   },
 
   // ===== CONTEXT MENU =====
-  showCtx:function(e,msgIdx){
-    if(msgIdx==null)return;
-    this.ctxTarget=msgIdx;
-    var menu=document.getElementById('ctx-menu');
-    var isFav=this.favorites.some(function(f){return f.msgIdx===msgIdx});
-    menu.innerHTML=
-      '<button onclick="App.copyMsg('+msgIdx+')">📋 复制</button>'+
-      '<button onclick="App.toggleFavorite('+msgIdx+')">'+(isFav?'💔 取消收藏':'⭐ 收藏')+'</button>'+
-      '<button class="danger" onclick="App.deleteMsg('+msgIdx+')">🗑 删除</button>';
-    menu.style.display='block';
-    var x=e.touches?e.touches[0].clientX:e.clientX;
-    var y=e.touches?e.touches[0].clientY:e.clientY;
-    menu.style.left=Math.min(x,window.innerWidth-140)+'px';
-    menu.style.top=Math.min(y,window.innerHeight-140)+'px';
-  },
+  showCtx:function(e,msgIdx){if(msgIdx==null)return;this.ctxTarget=msgIdx;var menu=document.getElementById('ctx-menu'),s=this,isFav=s.favorites.some(function(f){return f.msgIdx===msgIdx});menu.innerHTML='<button onclick="App.copyMsg('+msgIdx+')">📋 复制</button><button onclick="App.toggleFavorite('+msgIdx+')">'+(isFav?'💔 取消收藏':'⭐ 收藏')+'</button><button class="danger" onclick="App.deleteMsg('+msgIdx+')">🗑 删除</button>';menu.style.display='block';var x=e.touches?e.touches[0].clientX:e.clientX,y=e.touches?e.touches[0].clientY:e.clientY;menu.style.left=Math.min(x,window.innerWidth-140)+'px';menu.style.top=Math.min(y,window.innerHeight-140)+'px'},
   hideCtx:function(){document.getElementById('ctx-menu').style.display='none';this.ctxTarget=null},
-  copyMsg:function(idx){
-    var m=this.history[idx];if(!m)return;
-    navigator.clipboard&&navigator.clipboard.writeText(m.content).then(function(){}).catch(function(){});
-    this.toast('已复制');this.hideCtx();
-  },
-  deleteMsg:function(idx){
-    this.history.splice(idx,1);
-    // update favorite indices
-    this.favorites=this.favorites.filter(function(f){return f.msgIdx!==idx});
-    this.favorites.forEach(function(f){if(f.msgIdx>idx)f.msgIdx--});
-    this.saveHistory();this.saveFavorites();this.loadHistory();this.hideCtx();this.toast('已删除');
-  },
+  copyMsg:function(idx){var m=this.history[idx];if(!m)return;navigator.clipboard&&navigator.clipboard.writeText(m.content).catch(function(){});this.toast('已复制');this.hideCtx()},
+  deleteMsg:function(idx){this.history.splice(idx,1);this.favorites=this.favorites.filter(function(f){return f.msgIdx!==idx});this.favorites.forEach(function(f){if(f.msgIdx>idx)f.msgIdx--});this.saveHistory();this.saveFavorites();this.loadHistory();this.hideCtx();this.toast('已删除')},
 
   // ===== SEND =====
   send:async function(){
@@ -615,139 +623,58 @@ var App = {
     inp.value='';inp.style.height='auto';
     s.history.push({role:'user',content:text});
     while(s.history.length>80)s.history.shift();
-    var idx=s.history.length-1;
-    s.renderMsg('me',text,false,idx);
+    s.renderMsg('me',text,false,s.history.length-1);
     s.addTyping();s.userScrolledUp=false;
-
     try{
-      var resp=await fetch('https://api.deepseek.com/anthropic/messages',{
-        method:'POST',
-        headers:{'Content-Type':'application/json','Authorization':'Bearer '+s.API_KEY},
-        body:JSON.stringify({model:'deepseek-v4-pro[1m]',max_tokens:2048,messages:[{role:'user',content:s.SYSTEM},{role:'assistant',content:'好的。'},...s.history],stream:true})
-      });
+      var resp=await fetch('https://api.deepseek.com/anthropic/messages',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+s.API_KEY},body:JSON.stringify({model:'deepseek-v4-pro[1m]',max_tokens:2048,messages:[{role:'user',content:s.SYSTEM},{role:'assistant',content:'好的。'},...s.history],stream:true})});
       s.removeTyping();
       var body=s.renderMsg('ai',''),reader=resp.body.getReader(),decoder=new TextDecoder(),buf='',full='';
-      while(true){
-        var r=await reader.read();if(r.done)break;
-        buf+=decoder.decode(r.value,{stream:true});
-        var lines=buf.split('\n');buf=lines.pop()||'';
-        for(var i=0;i<lines.length;i++){
-          if(lines[i].startsWith('data: ')){
-            try{var d=JSON.parse(lines[i].slice(6));if(d.type==='content_block_delta'&&d.delta&&d.delta.text){full+=d.delta.text;body.textContent+=d.delta.text}}catch(e){}
-          }
-        }
-        if(!s.userScrolledUp)s.scrollDown();
-      }
-      if(full)s.history.push({role:'assistant',content:full});
-      s.saveHistory();
-    }catch(e){
-      s.removeTyping();var err=s.renderMsg('ai','连不上，重试一下');err.style.color='#e06060';s.history.pop();
-    }
+      while(true){var r=await reader.read();if(r.done)break;buf+=decoder.decode(r.value,{stream:true});var lines=buf.split('\n');buf=lines.pop()||'';for(var i=0;i<lines.length;i++){if(lines[i].startsWith('data: ')){try{var d=JSON.parse(lines[i].slice(6));if(d.type==='content_block_delta'&&d.delta&&d.delta.text){full+=d.delta.text;body.textContent+=d.delta.text}}catch(e){}}}if(!s.userScrolledUp)s.scrollDown()}
+      if(full)s.history.push({role:'assistant',content:full});s.saveHistory();
+    }catch(e){s.removeTyping();var err=s.renderMsg('ai','连不上，重试一下');err.style.color='#e06060';s.history.pop()}
     s.waiting=false;document.getElementById('send-btn').disabled=false;inp.focus();
+    s.renderLockCard();
   },
 
   // ===== HELPERS =====
-  esc:function(s){var d=document.createElement('div');d.textContent=s;return d.innerHTML},
-  fmtTime:function(ts){
-    var d=new Date(ts||Date.now()),now=new Date();
-    var h=d.getHours().toString().padStart(2,'0'),m=d.getMinutes().toString().padStart(2,'0'),time=h+':'+m;
-    if(d.toDateString()===now.toDateString())return time;
-    var y=new Date(now);y.setDate(y.getDate()-1);
-    if(d.toDateString()===y.toDateString())return '昨天 '+time;
-    return (d.getMonth()+1)+'/'+d.getDate()+' '+time;
-  },
+  esc:function(t){var d=document.createElement('div');d.textContent=t;return d.innerHTML},
+  fmtTime:function(ts){var d=new Date(ts||Date.now()),now=new Date(),h=d.getHours().toString().padStart(2,'0'),m=d.getMinutes().toString().padStart(2,'0'),time=h+':'+m;if(d.toDateString()===now.toDateString())return time;var y=new Date(now);y.setDate(y.getDate()-1);if(d.toDateString()===y.toDateString())return '昨天 '+time;return (d.getMonth()+1)+'/'+d.getDate()+' '+time},
   scrollDown:function(){this.userScrolledUp=false;document.getElementById('scroll-btn').classList.remove('show');var el=document.getElementById('chat-msgs');el.scrollTo({top:el.scrollHeight,behavior:'smooth'})},
-  addTyping:function(){
-    var d=document.createElement('div');d.className='typing';d.id='typing-indicator';
-    for(var i=0;i<3;i++){var s=document.createElement('span');d.appendChild(s)}
-    var label=document.createElement('span');label.className='typing-txt';label.textContent=this.aiName+'正在思考...';
-    d.appendChild(label);
-    document.getElementById('chat-msgs').appendChild(d);
-    if(!this.userScrolledUp)this.scrollDown();
-  },
+  addTyping:function(){var d=document.createElement('div');d.className='typing';d.id='typing-indicator';for(var i=0;i<3;i++){var s=document.createElement('span');d.appendChild(s)}var l=document.createElement('span');l.className='typing-txt';l.textContent=this.aiName+'正在思考...';d.appendChild(l);document.getElementById('chat-msgs').appendChild(d);if(!this.userScrolledUp)this.scrollDown()},
   removeTyping:function(){var e=document.getElementById('typing-indicator');if(e)e.remove()},
-  toast:function(txt){var t=document.getElementById('toast');t.textContent=txt;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},1500)},
+  toast:function(t){var el=document.getElementById('toast');el.textContent=t;el.classList.add('show');setTimeout(function(){el.classList.remove('show')},1500)},
 
   // ===== AVATARS =====
-  setAvEl:function(el,val){
-    if(typeof val==='string'&&val.indexOf('data:')===0){el.textContent='';el.style.backgroundImage='url('+val+')';el.style.backgroundSize='cover';el.style.backgroundPosition='center'}
-    else{el.textContent=val||'✨';el.style.backgroundImage='';el.style.backgroundSize=''}
-  },
-  refreshAllAvatars:function(){
-    var s=this;s.setAvEl(document.getElementById('splash-img'),s.splash);
-    document.getElementById('lock-name').textContent=s.aiName;
-    s.setAvEl(document.getElementById('set-me-av'),s.avMe);
-    s.setAvEl(document.getElementById('set-ai-av'),s.avAi);
-    s.setAvEl(document.getElementById('set-splash-av'),s.splash);
-    s.setAvEl(document.getElementById('pf-avatar'),s.avAi);
-  },
-  refreshProfile:function(){
-    var s=this;document.getElementById('pf-name').textContent=s.aiName;
-    document.getElementById('pf-bio').textContent=s.aiBio;
-    s.setAvEl(document.getElementById('pf-avatar'),s.avAi);
-    document.getElementById('pf-created').textContent='创建于 2026.07.18';
-    var tags=s.aiTags.split(',').map(function(t){return t.trim()}).filter(Boolean);
-    document.getElementById('pf-tags').innerHTML=tags.map(function(t){return '<span class="pf-tag">'+s.esc(t)+'</span>'}).join('');
-    document.getElementById('pf-timeline').innerHTML=
-      '<h4>关系时间线</h4>'+
-      '<div class="pf-tl-item"><span class="tl-date">07.18</span><span class="tl-dot"></span><span class="tl-text">第一次聊天</span></div>'+
-      '<div class="pf-tl-item"><span class="tl-date">07.19</span><span class="tl-dot"></span><span class="tl-text">搭建外接记忆库</span></div>'+
-      '<div class="pf-tl-item"><span class="tl-date">07.20</span><span class="tl-dot"></span><span class="tl-text">创建手机聊天系统</span></div>';
-  },
-  refreshSettings:function(){
-    document.getElementById('set-ai-name').value=this.aiName;
-    document.getElementById('set-ai-bio').value=this.aiBio;
-    document.getElementById('set-ai-tags').value=this.aiTags;
-    this.setAvEl(document.getElementById('set-me-av'),this.avMe);
-    this.setAvEl(document.getElementById('set-ai-av'),this.avAi);
-    this.setAvEl(document.getElementById('set-splash-av'),this.splash);
-  },
+  setAvEl:function(el,val){if(typeof val==='string'&&val.indexOf('data:')===0){el.textContent='';el.style.backgroundImage='url('+val+')';el.style.backgroundSize='cover';el.style.backgroundPosition='center'}else{el.textContent=val||'✨';el.style.backgroundImage='';el.style.backgroundSize=''}},
+  refreshAllAvatars:function(){var s=this;s.setAvEl(document.getElementById('splash-img'),s.splash);document.getElementById('lock-name').textContent=s.aiName;s.setAvEl(document.getElementById('set-me-av'),s.avMe);s.setAvEl(document.getElementById('set-ai-av'),s.avAi);s.setAvEl(document.getElementById('set-splash-av'),s.splash);s.setAvEl(document.getElementById('pf-avatar'),s.avAi)},
+  refreshProfile:function(){var s=this;document.getElementById('pf-name').textContent=s.aiName;document.getElementById('pf-bio').textContent=s.aiBio;s.setAvEl(document.getElementById('pf-avatar'),s.avAi);document.getElementById('pf-created')&&(document.getElementById('pf-created').textContent='创建于 2026.07.18');var tags=s.aiTags.split(',').map(function(t){return t.trim()}).filter(Boolean);document.getElementById('pf-tags').innerHTML=tags.map(function(t){return '<span class="pf-tag">'+s.esc(t)+'</span>'}).join('');document.getElementById('pf-timeline').innerHTML='<h4>成长时间轴</h4><div class="pf-tl-item"><span class="tl-date">07.18</span><span class="tl-dot"></span><span class="tl-text">第一次聊天</span></div><div class="pf-tl-item"><span class="tl-date">07.19</span><span class="tl-dot"></span><span class="tl-text">搭建外接记忆库</span></div><div class="pf-tl-item"><span class="tl-date">07.20</span><span class="tl-dot"></span><span class="tl-text">创建手机聊天系统</span></div>'+(s.history.length>=100?'<div class="pf-tl-item"><span class="tl-date">'+new Date().toISOString().split('T')[0].slice(5)+'</span><span class="tl-dot"></span><span class="tl-text">累计100条消息</span></div>':'')},
+  refreshSettings:function(){document.getElementById('set-ai-name').value=this.aiName;document.getElementById('set-ai-bio').value=this.aiBio;document.getElementById('set-ai-tags').value=this.aiTags;this.setAvEl(document.getElementById('set-me-av'),this.avMe);this.setAvEl(document.getElementById('set-ai-av'),this.avAi);this.setAvEl(document.getElementById('set-splash-av'),this.splash)},
 
-  pickEmoji:function(target){
-    var s=this;s.emojiTarget=target;
-    var grid=document.getElementById('emoji-grid');grid.innerHTML='';
-    s.EMOJIS.forEach(function(e){
-      var sp=document.createElement('span');sp.textContent=e;
-      sp.onclick=function(){s.saveAvatar(target,e);document.getElementById('emoji-picker').classList.remove('show')};
-      grid.appendChild(sp);
-    });
-    document.getElementById('emoji-picker').classList.add('show');
-  },
+  pickEmoji:function(target){var s=this;s.emojiTarget=target;var grid=document.getElementById('emoji-grid');grid.innerHTML='';s.EMOJIS.forEach(function(e){var sp=document.createElement('span');sp.textContent=e;sp.onclick=function(){s.saveAvatar(target,e);document.getElementById('emoji-picker').classList.remove('show')};grid.appendChild(sp)});document.getElementById('emoji-picker').classList.add('show')},
   pickImage:function(target){this.emojiTarget=target;document.getElementById('img-file').click()},
-  onImagePicked:function(e){
-    var s=this,file=e.target.files[0];if(!file)return;
-    var reader=new FileReader();
-    reader.onload=function(){
-      var img=new Image();img.onload=function(){
-        var c=document.createElement('canvas');c.width=c.height=200;
-        var ctx=c.getContext('2d'),sz=Math.min(img.width,img.height);
-        ctx.drawImage(img,(img.width-sz)/2,(img.height-sz)/2,sz,sz,0,0,200,200);
-        s.saveAvatar(s.emojiTarget,c.toDataURL('image/jpeg',0.7));
-      };img.src=reader.result;
-    };reader.readAsDataURL(file);e.target.value='';
-  },
-  saveAvatar:function(target,val){
-    var s=this;
-    if(target==='me'){s.avMe=val;try{localStorage.setItem('xk_av_me',val)}catch(e){};s.setAvEl(document.getElementById('set-me-av'),val)}
-    else if(target==='ai'){s.avAi=val;try{localStorage.setItem('xk_av_ai',val)}catch(e){};s.setAvEl(document.getElementById('set-ai-av'),val);s.setAvEl(document.getElementById('pf-avatar'),val)}
-    else if(target==='splash'){s.splash=val;try{localStorage.setItem('xk_splash',val)}catch(e){};s.setAvEl(document.getElementById('splash-img'),val);s.setAvEl(document.getElementById('set-splash-av'),val)}
-    s.toast('已更新');
-  },
+  onImagePicked:function(e){var s=this,file=e.target.files[0];if(!file)return;var reader=new FileReader();reader.onload=function(){var img=new Image();img.onload=function(){var c=document.createElement('canvas');c.width=c.height=200;var ctx=c.getContext('2d'),sz=Math.min(img.width,img.height);ctx.drawImage(img,(img.width-sz)/2,(img.height-sz)/2,sz,sz,0,0,200,200);s.saveAvatar(s.emojiTarget,c.toDataURL('image/jpeg',0.7))};img.src=reader.result};reader.readAsDataURL(file);e.target.value=''},
+  saveAvatar:function(target,val){var s=this;if(target==='me'){s.avMe=val;try{localStorage.setItem('xk_av_me',val)}catch(e){};s.setAvEl(document.getElementById('set-me-av'),val)}else if(target==='ai'){s.avAi=val;try{localStorage.setItem('xk_av_ai',val)}catch(e){};s.setAvEl(document.getElementById('set-ai-av'),val);s.setAvEl(document.getElementById('pf-avatar'),val)}else if(target==='splash'){s.splash=val;try{localStorage.setItem('xk_splash',val)}catch(e){};s.setAvEl(document.getElementById('splash-img'),val);s.setAvEl(document.getElementById('set-splash-av'),val)}s.toast('已更新')},
 
   // ===== SETTINGS =====
   saveName:function(n){this.aiName=n||'阿恕';try{localStorage.setItem('xk_ai_name',this.aiName)}catch(e){};document.getElementById('lock-name').textContent=this.aiName;document.getElementById('pf-name').textContent=this.aiName;document.getElementById('topbar-title').textContent=this.aiName},
-  saveBio:function(b){this.aiBio=b||'如你的心';try{localStorage.setItem('xk_ai_bio',this.aiBio)}catch(e){};document.getElementById('pf-bio').textContent=this.aiBio},
+  saveBio:function(b){this.aiBio=b||'如你的心';try{localStorage.setItem('xk_ai_bio',this.aiBio)}catch(e){};document.getElementById('pf-bio').textContent=this.aiBio;document.getElementById('lock-sub').textContent=this.aiBio},
   saveTags:function(t){this.aiTags=t;try{localStorage.setItem('xk_ai_tags',t)}catch(e){};this.refreshProfile()},
 
-  // ===== COLOR =====
-  applyColor:function(){document.documentElement.style.setProperty('--bubble-u',this.color);document.documentElement.style.setProperty('--accent',this.color)},
-  buildColorDots:function(){
-    var s=this,ct=document.getElementById('color-dots');ct.innerHTML='';
-    s.COLORS.forEach(function(c){
-      var d=document.createElement('span');d.style.background=c;
-      if(c===s.color)d.className='on';
-      d.onclick=function(){s.color=c;try{localStorage.setItem('xk_color',c)}catch(e){};s.applyColor();s.buildColorDots()};
-      ct.appendChild(d);
+  // ===== THEME =====
+  applyTheme:function(){
+    var accent=this.THEMES[this.theme]||'#5b9eff';
+    document.documentElement.style.setProperty('--accent',accent);
+    document.documentElement.style.setProperty('--bubble-u',accent);
+  },
+  buildThemeGrid:function(){
+    var s=this,grid=document.getElementById('theme-grid'),themes=Object.keys(s.THEMES);
+    grid.innerHTML='';
+    themes.forEach(function(t){
+      var c=s.THEMES[t],card=document.createElement('div');
+      card.className='theme-card'+(t===s.theme?' on':'');
+      card.innerHTML='<div class="t-dot" style="background:'+c+'"></div><div class="t-name">'+t+'</div>';
+      card.onclick=function(){s.theme=t;try{localStorage.setItem('xk_theme',t)}catch(e){};s.applyTheme();s.buildThemeGrid();s.buildColorDots&&s.buildColorDots()};
+      grid.appendChild(card);
     });
   }
 };
