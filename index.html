@@ -381,67 +381,66 @@ function buildPalette(cur){
 const EMOJIS=['😊','😎','🥰','😇','🤩','🫶','🐱','🐰','🦊','🐼','🌸','⭐','✨','💫','🌙','☀️','💖','🎀','🍀','🫧'];
 let pickingTarget=null;
 function setAvatarEl(el,val){
-  if(val.startsWith('data:')){
-    el.textContent='';
-    el.style.backgroundImage=`url(${val})`;
-    el.style.backgroundSize='cover';
-    el.style.backgroundPosition='center';
-  }else{
-    el.textContent=val;
-    el.style.backgroundImage='';
-    el.style.backgroundSize='';
-  }
+  if(!el)return;
+  try{
+    if(typeof val==='string'&&val.startsWith('data:')){
+      el.textContent='';
+      el.style.backgroundImage='url('+val+')';
+      el.style.backgroundSize='cover';
+      el.style.backgroundPosition='center';
+    }else{
+      el.textContent=val||'';
+      el.style.backgroundImage='';
+      el.style.backgroundSize='';
+    }
+  }catch(e){}
 }
-function pickAvatar(who){
+window.pickAvatar=function(who){
   pickingTarget=who;
-  const grid=document.getElementById('emojiGrid');
+  var grid=document.getElementById('emojiGrid');
+  if(!grid)return;
   grid.innerHTML='';
-  EMOJIS.forEach(e=>{
-    const s=document.createElement('span');
+  EMOJIS.forEach(function(e){
+    var s=document.createElement('span');
     s.textContent=e;
-    s.onclick=()=>{
-      if(who==='me'){avMe=e;localStorage.setItem('xk_av_me',e);setAvatarEl(document.getElementById('avMe'),e);}
-      else{avAi=e;localStorage.setItem('xk_av_ai',e);setAvatarEl(document.getElementById('avAi'),e);}
-      document.getElementById('emojis').classList.remove('show');
+    s.onclick=function(){
+      if(pickingTarget==='me'){avMe=e;try{localStorage.setItem('xk_av_me',e)}catch(ee){}setAvatarEl(document.getElementById('avMe'),e);}
+      else{avAi=e;try{localStorage.setItem('xk_av_ai',e)}catch(ee){}setAvatarEl(document.getElementById('avAi'),e);}
+      var em=document.getElementById('emojis');if(em)em.classList.remove('show');
     };
     grid.appendChild(s);
   });
-  // upload button
-  const up=document.createElement('span');
-  up.textContent='📷';
-  up.style.fontSize='22px';
-  up.onclick=()=>document.getElementById('imgFile').click();
+  var up=document.createElement('span');
+  up.textContent='📷';up.style.fontSize='22px';
+  up.onclick=function(){var f=document.getElementById('imgFile');if(f)f.click();};
   grid.appendChild(up);
-  document.getElementById('emojis').classList.add('show');
-}
-function handleImgUpload(e){
-  const file=e.target.files[0];
+  var em=document.getElementById('emojis');if(em)em.classList.add('show');
+};
+window.handleImgUpload=function(e){
+  var file=e.target.files[0];
   if(!file)return;
-  const reader=new FileReader();
+  var reader=new FileReader();
   reader.onload=function(){
-    const img=new Image();
+    var img=new Image();
     img.onload=function(){
-      const c=document.createElement('canvas');
+      var c=document.createElement('canvas');
       c.width=c.height=120;
-      const ctx=c.getContext('2d');
-      const s=Math.min(img.width,img.height);
-      const sx=(img.width-s)/2,sy=(img.height-s)/2;
+      var ctx=c.getContext('2d');
+      var s=Math.min(img.width,img.height);
+      var sx=(img.width-s)/2,sy=(img.height-s)/2;
       ctx.drawImage(img,sx,sy,s,s,0,0,120,120);
-      const dataUrl=c.toDataURL('image/jpeg',0.7);
-      if(pickingTarget==='me'){
-        avMe=dataUrl;localStorage.setItem('xk_av_me',dataUrl);setAvatarEl(document.getElementById('avMe'),dataUrl);
-      }else{
-        avAi=dataUrl;localStorage.setItem('xk_av_ai',dataUrl);setAvatarEl(document.getElementById('avAi'),dataUrl);
-      }
-      document.getElementById('emojis').classList.remove('show');
+      var dataUrl=c.toDataURL('image/jpeg',0.7);
+      if(pickingTarget==='me'){avMe=dataUrl;try{localStorage.setItem('xk_av_me',dataUrl)}catch(ee){}setAvatarEl(document.getElementById('avMe'),dataUrl);}
+      else{avAi=dataUrl;try{localStorage.setItem('xk_av_ai',dataUrl)}catch(ee){}setAvatarEl(document.getElementById('avAi'),dataUrl);}
+      var em=document.getElementById('emojis');if(em)em.classList.remove('show');
     };
     img.src=reader.result;
   };
   reader.readAsDataURL(file);
   e.target.value='';
-}
-setAvatarEl(document.getElementById('avMe'),avMe);
-setAvatarEl(document.getElementById('avAi'),avAi);
+};
+try{setAvatarEl(document.getElementById('avMe'),avMe)}catch(e){}
+try{setAvatarEl(document.getElementById('avAi'),avAi)}catch(e){}
 
 // ===== UTILS =====
 function fmtTime(ts){
