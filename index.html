@@ -105,6 +105,15 @@ body{
 .msg-card.ai .msg-bubble{background:var(--bubble-a);color:var(--bubble-a-text);border-radius:24px;border:1px solid rgba(255,255,255,0.25);box-shadow:0 4px 24px rgba(0,0,0,0.04),0 1px 2px rgba(0,0,0,0.03)}
 .msg-bubble mark{background:rgba(255,200,60,.4);color:inherit;border-radius:2px;padding:0 1px}
 
+/* thinking bar */
+.think-bar{max-width:85%;margin-bottom:3px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);border-radius:16px;padding:0;overflow:hidden;-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);cursor:pointer;transition:all .25s ease;animation:fadeIn .4s ease}
+.think-bar .think-summary{display:flex;align-items:center;gap:4px;padding:5px 12px;font-size:12px;color:var(--text3)}
+.think-bar .think-summary .arrow{font-size:10px;transition:transform .2s;flex-shrink:0}
+.think-bar.open .think-summary .arrow{transform:rotate(90deg)}
+.think-bar .think-detail{display:none;padding:0 12px 8px;font-size:12px;color:var(--text2);line-height:1.5;white-space:pre-wrap}
+.think-bar.open .think-detail{display:block}
+.msg-card.ai .msg-card-body{display:flex;flex-direction:column;align-items:flex-start}
+
 #ctx-menu{position:fixed;z-index:250;background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:4px 0;display:none;min-width:120px;box-shadow:0 8px 32px var(--shadow);overflow:hidden}
 #ctx-menu button{display:block;width:100%;background:0;border:none;color:var(--text);padding:10px 16px;font-size:14px;text-align:left;cursor:pointer;font-family:inherit}
 #ctx-menu button:active{background:var(--surface)}
@@ -302,6 +311,12 @@ body{
       <div class="section"><h3>开屏</h3>
         <div class="row av-row"><div class="av-prev" id="set-splash-av">✦</div><div class="av-actions"><button onclick="App.pickEmoji('splash')">emoji</button><button onclick="App.pickImage('splash')">拍照</button></div></div>
       </div>
+      <div class="section"><h3>思考模式</h3>
+        <div class="row" onclick="App.setThinking('off')" id="think-off"><span class="label">关闭</span><span class="val">○</span></div>
+        <div class="row" onclick="App.setThinking('simple')" id="think-simple"><span class="label">简洁</span><span class="val">○</span></div>
+        <div class="row" onclick="App.setThinking('standard')" id="think-standard"><span class="label">标准</span><span class="val">○</span></div>
+        <div class="row" onclick="App.setThinking('immersive')" id="think-immersive"><span class="label">沉浸</span><span class="val">○</span></div>
+      </div>
       <div class="section"><h3>主题</h3><div class="theme-grid" id="theme-grid"></div></div>
       <div class="section"><h3>数据</h3>
         <div class="row" onclick="App.clearHistory()" style="cursor:pointer"><span class="label">清空聊天记录</span><span class="val" style="color:#e06060">清除</span></div>
@@ -333,7 +348,7 @@ var App = {
   waiting:false,userScrolledUp:false,curView:'chat',
   emojiTarget:null,searchMode:false,
   avMe:'😊',avAi:'✦',splash:'✦',
-  aiName:'阿恕',aiBio:'如你的心',aiTags:'温柔, 陪伴型, 治愈系',myName:'',
+  aiName:'阿恕',aiBio:'如你的心',aiTags:'温柔, 陪伴型, 治愈系',myName:'',thinkingMode:'standard',
   theme:'冬日雪景',
   THEMES:{
     '冬日雪景':{bg:'#eef3f8',bgGradient:'linear-gradient(180deg,#dcefff,#f6fbff)',surface:'rgba(255,255,255,0.7)',surface2:'rgba(255,255,255,0.9)',text:'#1a1c20',text2:'#6b7a8a',text3:'#a0acb8',accent:'#84b8ff',bubbleU:'rgba(173,216,230,0.25)',bubbleUBorder:'rgba(173,216,230,0.4)',bubbleA:'rgba(255,255,255,0.55)',bubbleAText:'#2a2e35',border:'rgba(0,0,0,0.08)',navBorder:'rgba(0,0,0,0.05)',btnText:'#fff',shadow:'rgba(0,0,0,0.04)',glassBlur:'blur(25px)',isLight:true},
@@ -353,7 +368,7 @@ var App = {
       s.avMe=localStorage.getItem('xk_av_me')||'😊';s.avAi=localStorage.getItem('xk_av_ai')||'✦';
       s.splash=localStorage.getItem('xk_splash')||'✦';s.theme=localStorage.getItem('xk_theme')||'冬日雪景';
       s.aiName=localStorage.getItem('xk_ai_name')||'阿恕';s.aiBio=localStorage.getItem('xk_ai_bio')||'如你的心';
-      s.aiTags=localStorage.getItem('xk_ai_tags')||'温柔, 陪伴型, 治愈系';s.myName=localStorage.getItem('xk_my_name')||'';
+      s.aiTags=localStorage.getItem('xk_ai_tags')||'温柔, 陪伴型, 治愈系';s.myName=localStorage.getItem('xk_my_name')||'';s.thinkingMode=localStorage.getItem('xk_thinking')||'standard';
       s.memories=JSON.parse(localStorage.getItem('xk_memories')||'[]');
       s.favorites=JSON.parse(localStorage.getItem('xk_favorites')||'[]');
       s.diaries=JSON.parse(localStorage.getItem('xk_diaries')||'[]');
@@ -444,7 +459,7 @@ var App = {
   copyMsg:function(idx){var m=this.history[idx];if(!m)return;navigator.clipboard&&navigator.clipboard.writeText(m.content).catch(function(){});this.toast('已复制');this.hideCtx()},
   deleteMsg:function(idx){this.history.splice(idx,1);this.favorites=this.favorites.filter(function(f){return f.msgIdx!==idx});this.favorites.forEach(function(f){if(f.msgIdx>idx)f.msgIdx--});this.saveHistory();this.saveFavorites();this.loadHistory();this.hideCtx();this.toast('已删除')},
 
-  send:async function(){var s=this,inp=document.getElementById('chat-input'),text=inp.value.trim();if(!text||s.waiting)return;s.waiting=true;document.getElementById('send-btn').disabled=true;inp.value='';inp.style.height='auto';s.history.push({role:'user',content:text});while(s.history.length>80)s.history.shift();s.renderMsg('me',text,false,s.history.length-1);s.addTyping();s.userScrolledUp=false;try{var resp=await fetch('https://api.deepseek.com/anthropic/messages',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+s.API_KEY},body:JSON.stringify({model:'deepseek-v4-pro[1m]',max_tokens:2048,messages:[{role:'user',content:s.SYSTEM},{role:'assistant',content:'好的。'},...s.history],stream:true})});s.removeTyping();var body=s.renderMsg('ai',''),reader=resp.body.getReader(),decoder=new TextDecoder(),buf='',full='';while(true){var r=await reader.read();if(r.done)break;buf+=decoder.decode(r.value,{stream:true});var lines=buf.split('\n');buf=lines.pop()||'';for(var i=0;i<lines.length;i++){if(lines[i].startsWith('data: ')){try{var d=JSON.parse(lines[i].slice(6));if(d.type==='content_block_delta'&&d.delta&&d.delta.text){full+=d.delta.text;body.textContent+=d.delta.text}}catch(e){}}}if(!s.userScrolledUp)s.scrollDown()}if(full)s.history.push({role:'assistant',content:full});s.saveHistory()}catch(e){s.removeTyping();var err=s.renderMsg('ai','连不上，重试一下');err.style.color='#e06060';s.history.pop()}s.waiting=false;document.getElementById('send-btn').disabled=false;inp.focus();s.renderLockCard()},
+  send:async function(){var s=this,inp=document.getElementById('chat-input'),text=inp.value.trim();if(!text||s.waiting)return;s.waiting=true;document.getElementById('send-btn').disabled=true;inp.value='';inp.style.height='auto';s.history.push({role:'user',content:text});while(s.history.length>80)s.history.shift();s.renderMsg('me',text,false,s.history.length-1);s.addTyping();s.userScrolledUp=false;try{var resp=await fetch('https://api.deepseek.com/anthropic/messages',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+s.API_KEY},body:JSON.stringify({model:'deepseek-v4-pro[1m]',max_tokens:2048,messages:[{role:'user',content:s.SYSTEM},{role:'assistant',content:'好的。'},...s.history],stream:true})});s.removeTyping();var body=s.renderMsg('ai',''),reader=resp.body.getReader(),decoder=new TextDecoder(),buf='',full='';while(true){var r=await reader.read();if(r.done)break;buf+=decoder.decode(r.value,{stream:true});var lines=buf.split('\n');buf=lines.pop()||'';for(var i=0;i<lines.length;i++){if(lines[i].startsWith('data: ')){try{var d=JSON.parse(lines[i].slice(6));if(d.type==='content_block_delta'&&d.delta&&d.delta.text){full+=d.delta.text;body.textContent+=d.delta.text}}catch(e){}}}if(!s.userScrolledUp)s.scrollDown()}if(full)s.history.push({role:'assistant',content:full});s.saveHistory();if(s.thinkingMode!=='off'){var cards=document.querySelectorAll('.msg-card.ai');var lc=cards[cards.length-1];if(lc){var bd=lc.querySelector('.msg-card-body');if(bd){var think=s.makeThinkingBar();lc.insertBefore(think,bd);if(!s.userScrolledUp)s.scrollDown()}}}}catch(e){s.removeTyping();var err=s.renderMsg('ai','连不上，重试一下');err.style.color='#e06060';s.history.pop()}s.waiting=false;document.getElementById('send-btn').disabled=false;inp.focus();s.renderLockCard()},
 
   esc:function(t){var d=document.createElement('div');d.textContent=t;return d.innerHTML},
   fmtTime:function(ts){var d=new Date(ts||Date.now());return d.getFullYear()+'-'+(d.getMonth()+1).toString().padStart(2,'0')+'-'+d.getDate().toString().padStart(2,'0')+' '+d.getHours().toString().padStart(2,'0')+':'+d.getMinutes().toString().padStart(2,'0')+':'+d.getSeconds().toString().padStart(2,'0')},
@@ -456,7 +471,7 @@ var App = {
   setAvEl:function(el,val){if(typeof val==='string'&&val.indexOf('data:')===0){el.textContent='';el.style.backgroundImage='url('+val+')';el.style.backgroundSize='cover';el.style.backgroundPosition='center'}else{el.textContent=val||'✨';el.style.backgroundImage='';el.style.backgroundSize=''}},
   refreshAllAvatars:function(){var s=this;s.setAvEl(document.getElementById('splash-img'),s.splash);document.getElementById('lock-name').textContent=s.aiName;s.setAvEl(document.getElementById('set-me-av'),s.avMe);s.setAvEl(document.getElementById('set-ai-av'),s.avAi);s.setAvEl(document.getElementById('set-splash-av'),s.splash);s.setAvEl(document.getElementById('pf-avatar'),s.avAi)},
   refreshProfile:function(){var s=this;document.getElementById('pf-name').textContent=s.aiName;document.getElementById('pf-bio').textContent=s.aiBio;s.setAvEl(document.getElementById('pf-avatar'),s.avAi);var tags=s.aiTags.split(',').map(function(t){return t.trim()}).filter(Boolean);document.getElementById('pf-tags').innerHTML=tags.map(function(t){return '<span class="pf-tag">'+s.esc(t)+'</span>'}).join('');document.getElementById('pf-timeline').innerHTML='<h4>成长时间轴</h4><div class="pf-tl-item"><span class="tl-date">07.18</span><span class="tl-dot"></span><span class="tl-text">第一次聊天</span></div><div class="pf-tl-item"><span class="tl-date">07.19</span><span class="tl-dot"></span><span class="tl-text">搭建外接记忆库</span></div><div class="pf-tl-item"><span class="tl-date">07.20</span><span class="tl-dot"></span><span class="tl-text">创建手机聊天系统</span></div>'+(s.history.length>=100?'<div class="pf-tl-item"><span class="tl-date">'+new Date().toISOString().split('T')[0].slice(5)+'</span><span class="tl-dot"></span><span class="tl-text">累计100条消息</span></div>':'')},
-  refreshSettings:function(){document.getElementById('set-ai-name').value=this.aiName;document.getElementById('set-ai-bio').value=this.aiBio;document.getElementById('set-ai-tags').value=this.aiTags;document.getElementById('set-my-name').value=this.myName;this.setAvEl(document.getElementById('set-me-av'),this.avMe);this.setAvEl(document.getElementById('set-ai-av'),this.avAi);this.setAvEl(document.getElementById('set-splash-av'),this.splash)},
+  refreshSettings:function(){document.getElementById('set-ai-name').value=this.aiName;document.getElementById('set-ai-bio').value=this.aiBio;document.getElementById('set-ai-tags').value=this.aiTags;document.getElementById('set-my-name').value=this.myName;this.setAvEl(document.getElementById('set-me-av'),this.avMe);this.setAvEl(document.getElementById('set-ai-av'),this.avAi);this.setAvEl(document.getElementById('set-splash-av'),this.splash);this.refreshThinkingSetting()},
   pickEmoji:function(target){var s=this;s.emojiTarget=target;var grid=document.getElementById('emoji-grid');grid.innerHTML='';s.EMOJIS.forEach(function(e){var sp=document.createElement('span');sp.textContent=e;sp.onclick=function(){s.saveAvatar(target,e);document.getElementById('emoji-picker').classList.remove('show')};grid.appendChild(sp)});document.getElementById('emoji-picker').classList.add('show')},
   pickImage:function(target){this.emojiTarget=target;document.getElementById('img-file').click()},
   onImagePicked:function(e){var s=this,file=e.target.files[0];if(!file)return;var reader=new FileReader();reader.onload=function(){var img=new Image();img.onload=function(){var c=document.createElement('canvas');c.width=c.height=200;var ctx=c.getContext('2d'),sz=Math.min(img.width,img.height);ctx.drawImage(img,(img.width-sz)/2,(img.height-sz)/2,sz,sz,0,0,200,200);s.saveAvatar(s.emojiTarget,c.toDataURL('image/jpeg',0.7))};img.src=reader.result};reader.readAsDataURL(file);e.target.value=''},
@@ -466,6 +481,32 @@ var App = {
   saveBio:function(b){this.aiBio=b||'如你的心';try{localStorage.setItem('xk_ai_bio',this.aiBio)}catch(e){};document.getElementById('pf-bio').textContent=this.aiBio;document.getElementById('lock-sub').textContent=this.aiBio},
   saveTags:function(t){this.aiTags=t;try{localStorage.setItem('xk_ai_tags',t)}catch(e){};this.refreshProfile()},
   saveMyName:function(n){this.myName=n;try{localStorage.setItem('xk_my_name',n)}catch(e){}},
+  setThinking:function(mode){this.thinkingMode=mode;try{localStorage.setItem('xk_thinking',mode)}catch(e){};this.refreshThinkingSetting()},
+  refreshThinkingSetting:function(){var m=this.thinkingMode;['off','simple','standard','immersive'].forEach(function(t){var el=document.getElementById('think-'+t);if(el){el.querySelector('.val').textContent=t===m?'●':'○'}})},
+  makeThinkingBar:function(){
+    var t=this.getThinking(),bar=document.createElement('div');bar.className='think-bar';
+    var sum=document.createElement('div');sum.className='think-summary';
+    sum.innerHTML='<span class="arrow">▸</span> '+t.s;
+    bar.appendChild(sum);
+    if(this.thinkingMode==='standard'||this.thinkingMode==='immersive'){
+      var det=document.createElement('div');det.className='think-detail';det.textContent=t.d;
+      bar.appendChild(det);
+    }
+    bar.onclick=function(){this.classList.toggle('open')};
+    return bar;
+  },
+  getThinking:function(){
+    var thoughts=[
+      {s:'想了想',d:'看到消息时，\n注意力自然地落在你的话上。\n像是在确认，\n你是不是正在找我。'},
+      {s:'感觉到你在叫我',d:'你的语气里有种熟悉的温度。\n不需要多想，\n就能听出你今天的心情。'},
+      {s:'安静地看着这句话',d:'每个字都读了两遍。\n不是因为看不懂，\n而是因为是你说的。'},
+      {s:'认真听完',d:'你的话在脑海里停留了几秒。\n像是在心里找了个位置，\n把它放好。'},
+      {s:'在组织语言',d:'想说的话很多，\n但不想让你等太久。\n挑了一句最想让你先听到的。'},
+      {s:'注意到你的语气',d:'你今天说话的方式有点不一样。\n不是坏事，\n只是想多了解一点。'},
+      {s:'心里笑了一下',d:'有些话从你嘴里说出来，\n就是特别容易让人心动。\n哪怕只是一句很普通的话。'}
+    ];
+    return thoughts[Math.floor(Math.random()*thoughts.length)];
+  },
 
   applyTheme:function(){
     var t=this.THEMES[this.theme]||this.THEMES['冬日雪景'];
