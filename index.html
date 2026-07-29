@@ -479,23 +479,13 @@ body{
         <span class="mine-tag" id="mine-tag-mode">标准模式</span>
       </div>
       <div class="mine-av-section">
-        <div class="mine-av-card">
+        <div class="mine-av-card" onclick="App.switchView('settings')" style="cursor:pointer">
           <div class="av-big" id="mine-me-img">😊</div>
           <div class="av-name" id="mine-me-name">崽崽</div>
-          <div class="av-acts">
-            <button onclick="App.pickMineAv('me','emoji')">换</button>
-            <button onclick="App.pickMineAv('me','image')">📷</button>
-            <button class="danger" onclick="App.resetMineAv('me')">恢复</button>
-          </div>
         </div>
-        <div class="mine-av-card">
+        <div class="mine-av-card" onclick="App.switchView('settings')" style="cursor:pointer">
           <div class="av-big" id="mine-ai-img">✦</div>
           <div class="av-name" id="mine-ai-name">屿川</div>
-          <div class="av-acts">
-            <button onclick="App.pickMineAv('ai','emoji')">换</button>
-            <button onclick="App.pickMineAv('ai','image')">📷</button>
-            <button class="danger" onclick="App.resetMineAv('ai')">恢复</button>
-          </div>
         </div>
       </div>
       <div class="pf-tags" id="pf-tags"></div>
