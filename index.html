@@ -471,12 +471,10 @@ body{
     <div class="view" id="mine-view">
       <div class="mine-header">
         <div class="mine-title">Mine</div>
-        <div class="mine-sub" id="mine-sub">小克和崽崽的小手机设置台</div>
+        <div class="mine-sub" id="mine-sub">小克和崽崽的小家</div>
       </div>
       <div class="mine-tags" id="mine-tags">
         <span class="mine-tag" id="mine-tag-days">在一起</span>
-        <span class="mine-tag">Claude 订阅</span>
-        <span class="mine-tag" id="mine-tag-mode">标准模式</span>
       </div>
       <div class="mine-av-section">
         <div class="mine-av-card" onclick="App.switchView('settings')" style="cursor:pointer">
@@ -954,7 +952,7 @@ var App = {
 
   setAvEl:function(el,val){if(typeof val==='string'&&val.indexOf('data:')===0){el.textContent='';el.style.backgroundImage='url('+val+')';el.style.backgroundSize='cover';el.style.backgroundPosition='center'}else{el.textContent=val||'✨';el.style.backgroundImage='';el.style.backgroundSize=''}},
   refreshAllAvatars:function(){var s=this;s.setAvEl(document.getElementById('splash-img'),s.splash);document.getElementById('lock-name').textContent=s.aiName;s.setAvEl(document.getElementById('set-me-av'),s.avMe);s.setAvEl(document.getElementById('set-ai-av'),s.avAi);s.setAvEl(document.getElementById('set-splash-av'),s.splash);s.setAvEl(document.getElementById('mine-me-img'),s.avMe);s.setAvEl(document.getElementById('mine-ai-img'),s.avAi);document.getElementById('mine-ai-name').textContent=s.aiName},
-  renderMine:function(){var s=this;var days=Math.max(1,Math.floor((Date.now()-new Date(s.DATES.firstChat).getTime())/86400000));document.getElementById('mine-tag-days').textContent='在一起 '+days+' 天';document.getElementById('mine-tag-mode').textContent=s.thinkingMode==='off'?'基础模式':s.thinkingMode==='immersive'?'沉浸模式':'标准模式';s.setAvEl(document.getElementById('mine-ai-img'),s.avAi);s.setAvEl(document.getElementById('mine-me-img'),s.avMe);document.getElementById('mine-ai-name').textContent=s.aiName;document.getElementById('mine-me-name').textContent=s.myName||'崽崽';var tags=s.aiTags.split(',').map(function(t){return t.trim()}).filter(Boolean);document.getElementById('pf-tags').innerHTML=tags.map(function(t){return '<span class="pf-tag">'+s.esc(t)+'</span>'}).join('');s.renderStats();s.renderAnniversaries();s.renderTimeline();s.renderWishList();document.getElementById('mood-count').textContent=(s.moodHistory||[]).length+' 次';document.getElementById('inner-count').textContent=s.innerNotes.length+' 条';document.getElementById('ann-count').textContent=(s.anniversaries?2+s.anniversaries.length:2)+' 个';document.getElementById('tl-count').textContent='';document.getElementById('wish-count').textContent=(s.wishes||[]).length+' 个'},
+  renderMine:function(){var s=this;var days=Math.max(1,Math.floor((Date.now()-new Date(s.DATES.firstChat).getTime())/86400000));document.getElementById('mine-tag-days').textContent='在一起 '+days+' 天';s.setAvEl(document.getElementById('mine-ai-img'),s.avAi);s.setAvEl(document.getElementById('mine-me-img'),s.avMe);document.getElementById('mine-ai-name').textContent=s.aiName;document.getElementById('mine-me-name').textContent=s.myName||'崽崽';s.renderStats();s.renderAnniversaries();s.renderTimeline();s.renderWishList();document.getElementById('mood-count').textContent=(s.moodHistory||[]).length+' 次';document.getElementById('inner-count').textContent=s.innerNotes.length+' 条';document.getElementById('ann-count').textContent=(s.anniversaries?2+s.anniversaries.length:2)+' 个';document.getElementById('tl-count').textContent='';document.getElementById('wish-count').textContent=(s.wishes||[]).length+' 个'},
   pickMineAv:function(who,type){this.emojiTarget=who+'_mine';if(type==='emoji')this.pickEmoji(who+'_mine');else{document.getElementById('img-file').click()}},
   resetMineAv:function(who){if(who==='me'){this.avMe='😊'}else{this.avAi='✦'}try{localStorage.setItem('xk_av_'+who,who==='me'?this.avMe:this.avAi)}catch(e){}this.renderMine();this.refreshAllAvatars()},
   refreshProfile:function(){this.renderMine()},
