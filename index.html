@@ -181,17 +181,18 @@ body{
 .mem-card .mem-hint{font-size:10px;color:var(--text3);flex-shrink:0;align-self:center}
 .mem-card .mem-date{font-size:10px;color:var(--text3);flex-shrink:0}
 .mem-card .mem-del{background:0;border:none;color:var(--text3);cursor:pointer;padding:4px;font-size:14px}
-.weather-card{margin:0 14px 12px;padding:18px 20px;background:linear-gradient(135deg,var(--accent),color-mix(in srgb,var(--accent) 60%,#6a9fc4));border-radius:16px;color:#fff;box-shadow:0 4px 16px rgba(0,0,0,0.12);position:relative;overflow:visible;min-height:54px;width:calc(100% - 28px)}
-.weather-card::after{content:'';position:absolute;top:-20px;right:-20px;width:80px;height:80px;background:rgba(255,255,255,0.08);border-radius:50%;pointer-events:none}
-.weather-loading{font-size:13px;opacity:0.8;text-align:center;padding:10px 0}
+.weather-card{margin:0 14px 12px;padding:18px 20px;background:linear-gradient(135deg,rgba(0,0,0,0.35),rgba(0,0,0,0.2)),linear-gradient(135deg,var(--accent),color-mix(in srgb,var(--accent) 60%,#6a9fc4));border-radius:16px;color:#fff;box-shadow:0 4px 16px rgba(0,0,0,0.12);position:relative;overflow:visible;min-height:54px;width:calc(100% - 28px)}
+.weather-card::after{content:'';position:absolute;top:-20px;right:-20px;width:80px;height:80px;background:rgba(255,255,255,0.06);border-radius:50%;pointer-events:none}
+.weather-loading{font-size:13px;text-align:center;padding:10px 0;text-shadow:0 1px 3px rgba(0,0,0,0.2)}
 .weather-main{display:flex;align-items:center;gap:10px;flex-wrap:nowrap}
 .weather-icon{font-size:36px;flex-shrink:0;line-height:1}
-.weather-temp{font-size:40px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.1}
-.weather-detail{display:flex;align-items:center;gap:8px;margin-top:6px;font-size:14px;opacity:0.9;flex-wrap:wrap}
+.weather-temp{font-size:40px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.1;text-shadow:0 1px 4px rgba(0,0,0,0.15)}
+.weather-detail{display:flex;align-items:center;gap:8px;margin-top:6px;font-size:14px;flex-wrap:wrap}
 .weather-city{font-weight:600}
-.weather-extra{margin-top:8px;font-size:12px;opacity:0.75;display:flex;gap:12px;flex-wrap:wrap}
-.weather-sub-card{padding:16px 18px;background:linear-gradient(135deg,var(--accent),color-mix(in srgb,var(--accent) 60%,#6a9fc4));border-radius:16px;color:#fff;margin-bottom:10px;box-shadow:0 4px 16px rgba(0,0,0,0.12);position:relative;overflow:hidden}
-.weather-sub-card::after{content:'';position:absolute;top:-20px;right:-20px;width:80px;height:80px;background:rgba(255,255,255,0.08);border-radius:50%}
+.weather-desc{opacity:0.9}
+.weather-extra{margin-top:8px;font-size:12px;opacity:0.85;display:flex;gap:12px;flex-wrap:wrap}
+.weather-sub-card{padding:16px 18px;background:linear-gradient(135deg,rgba(0,0,0,0.35),rgba(0,0,0,0.2)),linear-gradient(135deg,var(--accent),color-mix(in srgb,var(--accent) 60%,#6a9fc4));border-radius:16px;color:#fff;margin-bottom:10px;box-shadow:0 4px 16px rgba(0,0,0,0.12);position:relative;overflow:hidden}
+.weather-sub-card::after{content:'';position:absolute;top:-20px;right:-20px;width:80px;height:80px;background:rgba(255,255,255,0.06);border-radius:50%;pointer-events:none}
 .weather-sub-card .ws-top{display:flex;justify-content:space-between;align-items:flex-start}
 .weather-sub-card .ws-city{font-size:16px;font-weight:600}
 .weather-sub-card .ws-time{font-size:11px;opacity:0.7}
