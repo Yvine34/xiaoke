@@ -83,19 +83,19 @@ body{
 
 /* ========== CHAT - Message Card Layout ========== */
 #chat-msgs{flex:1;overflow-y:auto;padding:10px 10px 4px;display:flex;flex-direction:column}
-.msg-card{display:flex;flex-direction:column;margin-bottom:14px;animation:msgIn .35s cubic-bezier(.2,.8,.2,1);max-width:88%}
+.msg-card{display:flex;flex-direction:column;margin-bottom:14px;animation:msgIn .35s cubic-bezier(.2,.8,.2,1);max-width:72%}
 .msg-card.me{align-self:flex-end;align-items:flex-end}
 .msg-card.ai{align-self:flex-start;align-items:flex-start}
 
 .msg-card-head{display:flex;align-items:center;gap:8px;margin-bottom:3px}
 .msg-card.me .msg-card-head{flex-direction:row-reverse}
-.msg-card-av{width:34px;height:34px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:16px;background:var(--surface);overflow:hidden;box-shadow:0 2px 8px var(--shadow)}
+.msg-card-av{width:44px;height:44px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:16px;background:var(--surface);overflow:hidden;box-shadow:0 2px 8px var(--shadow)}
 .msg-card-av img{width:100%;height:100%;object-fit:cover}
 .msg-card-meta{display:flex;flex-direction:column;gap:1px}
 .msg-card.me .msg-card-meta{align-items:flex-end}
 .msg-card.ai .msg-card-meta{align-items:flex-start}
 .msg-card-name{font-size:11px;font-weight:600;color:var(--text);opacity:.85}
-.msg-card-time{font-size:9px;color:var(--text3);opacity:.6;letter-spacing:.3px}
+.msg-card-time{font-size:11px;color:var(--text3);opacity:.45;letter-spacing:.3px;margin-top:2px}
 
 .msg-card-body{width:100%}
 .msg-card.me .msg-card-body{display:flex;justify-content:flex-end}
@@ -185,19 +185,38 @@ body{
 
 @media(min-width:640px){.note-card{min-width:340px;max-width:380px}}
 
-/* ========== PROFILE ========== */
-#profile-view{padding:28px 18px;align-items:center;gap:12px}
-#profile-view .pf-av{width:80px;height:80px;border-radius:50%;background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:38px;overflow:hidden;flex-shrink:0;box-shadow:0 4px 16px var(--shadow)}
-#profile-view .pf-av img{width:100%;height:100%;object-fit:cover}
-#profile-view .pf-name{font-size:21px;font-weight:600;color:var(--text)}
-#profile-view .pf-bio{font-size:13px;color:var(--text2);text-align:center;line-height:1.5;max-width:280px}
-#profile-view .pf-tags{display:flex;flex-wrap:wrap;gap:5px;justify-content:center}
-#profile-view .pf-tag{font-size:10px;background:var(--surface);color:var(--accent);padding:4px 10px;border-radius:10px;font-weight:500}
-.stats-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;width:100%;max-width:300px;margin-top:4px}
+/* ========== MINE PAGE ========== */
+#mine-view{padding:20px 18px 28px;align-items:center;gap:16px}
+.mine-header{text-align:center;margin-bottom:4px}
+.mine-header .mine-title{font-size:22px;font-weight:700;color:var(--text)}
+.mine-header .mine-sub{font-size:12px;color:var(--text3);margin-top:3px}
+.mine-tags{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:8px}
+.mine-tag{font-size:10px;background:var(--surface);color:var(--text2);padding:5px 12px;border-radius:14px;font-weight:500;backdrop-filter:var(--glass-blur);border:1px solid var(--border);box-shadow:0 1px 4px var(--shadow)}
+.mine-av-section{display:flex;justify-content:center;gap:28px;width:100%;max-width:360px;margin-bottom:8px}
+.mine-av-card{display:flex;flex-direction:column;align-items:center;gap:8px}
+.mine-av-card .av-big{width:72px;height:72px;border-radius:50%;background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:34px;overflow:hidden;box-shadow:0 4px 16px var(--shadow);border:2px solid rgba(255,255,255,0.6)}
+.mine-av-card .av-big img{width:100%;height:100%;object-fit:cover}
+.mine-av-card .av-name{font-size:14px;font-weight:600;color:var(--text)}
+.mine-av-card .av-acts{display:flex;gap:4px}
+.mine-av-card .av-acts button{background:var(--surface);border:1px solid var(--border);color:var(--text2);padding:3px 9px;border-radius:12px;font-size:10px;cursor:pointer;font-family:inherit}
+.mine-av-card .av-acts button:active{background:var(--accent);color:#fff}
+.mine-av-card .av-acts button.danger:active{background:#e06060;color:#fff}
+/* stats grid */
+.stats-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;width:100%;max-width:340px;margin-top:4px}
 .stat-item{background:var(--surface);border-radius:14px;padding:12px 8px;text-align:center;box-shadow:0 1px 6px var(--shadow)}
 .stat-item .sn{font-size:24px;font-weight:600;color:var(--accent)}
 .stat-item .sl{font-size:9px;color:var(--text3);margin-top:2px}
-.ann-section{width:100%;max-width:300px;margin-top:8px}
+/* quick access */
+.quick-access{width:100%;max-width:340px;margin-top:8px}
+.quick-access h4{font-size:11px;color:var(--text3);margin-bottom:8px;text-align:center;font-weight:600;letter-spacing:.5px}
+.qa-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.qa-item{background:var(--surface);border-radius:16px;padding:16px 10px;text-align:center;cursor:pointer;border:1px solid var(--border);box-shadow:0 1px 6px var(--shadow);transition:transform .15s}
+.qa-item:active{transform:scale(.96)}
+.qa-item .qa-icon{font-size:24px;margin-bottom:4px}
+.qa-item .qa-label{font-size:11px;color:var(--text2);font-weight:500}
+.qa-item .qa-badge{font-size:9px;color:var(--accent);font-weight:600;margin-top:2px}
+/* anniversaries */
+.ann-section{width:100%;max-width:340px;margin-top:10px}
 .ann-section h4{font-size:11px;color:var(--text3);margin-bottom:6px;text-align:center;font-weight:600}
 .ann-item{display:flex;align-items:center;gap:8px;background:var(--surface);border-radius:12px;padding:10px 12px;margin-bottom:4px;box-shadow:0 1px 4px var(--shadow)}
 .ann-item .ann-icon{font-size:18px}
@@ -210,7 +229,8 @@ body{
 .ann-add input[type=date]{flex:0 0 auto;width:100px}
 .ann-add button{background:var(--accent);color:var(--btn-text);border:none;border-radius:12px;padding:6px 14px;font-size:11px;cursor:pointer;white-space:nowrap;font-weight:500}
 .ann-del{background:0;border:none;color:var(--text3);cursor:pointer;font-size:12px;padding:2px}
-.pf-timeline{width:100%;max-width:300px;margin-top:8px}
+/* timeline */
+.pf-timeline{width:100%;max-width:340px;margin-top:10px}
 .pf-timeline h4{font-size:11px;color:var(--text3);margin-bottom:6px;text-align:center;font-weight:600}
 .pf-tl-item{display:flex;gap:8px;margin-bottom:6px;font-size:11px}
 .pf-tl-item .tl-dot{width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:4px}
@@ -280,7 +300,7 @@ body{
 @media(min-width:640px){
   #main-app{max-width:480px;margin:0 auto;border-left:1px solid var(--nav-border);border-right:1px solid var(--nav-border)}
   #lock-screen{max-width:480px;margin:0 auto;left:50%;transform:translateX(-50%)}
-  .msg-bubble{max-width:65%}
+  .msg-bubble{max-width:72%}
 }
 @media(min-width:1024px){body{display:flex;justify-content:center}#main-app{width:480px}}
 </style>
@@ -310,7 +330,7 @@ body{
     <div class="view active" id="chat-view">
       <div id="chat-msgs"></div>
       <div id="scroll-btn" onclick="App.scrollDown()">↓</div>
-      <div id="input-bar"><div class="wrap"><textarea id="chat-input" rows="1" placeholder="说点什么..."></textarea></div><button id="send-btn" onclick="App.send()">↑</button></div>
+      <div id="input-bar"><div class="wrap"><textarea id="chat-input" rows="1" placeholder="想和屿川说些什么？"></textarea></div><button id="send-btn" onclick="App.send()">↑</button></div>
     </div>
     <div class="view" id="memory-view">
       <div class="mem-stats" id="mem-stats"></div>
@@ -321,14 +341,50 @@ body{
     </div>
     <div class="view" id="diary-view"><div id="diary-entries"></div><div class="diary-add"><textarea id="diary-input" placeholder="写今天的日记..."></textarea><button onclick="App.addDiary()">记一笔</button></div></div>
     <div class="view" id="fav-view"><div class="fav-empty"><div class="fav-empty-icon">⭐</div>还没有收藏<br>长按消息可以收藏</div></div>
-    <div class="view" id="profile-view">
+    <div class="view" id="mine-view">
       <div class="note-carousel" id="note-carousel"></div>
       <div class="note-hint" id="note-hint">← 左右滑动 →</div>
-      <div class="pf-av" id="pf-avatar">✦</div>
-      <div class="pf-name" id="pf-name">阿恕</div>
-      <div class="pf-bio" id="pf-bio">如你的心</div>
-      <div class="pf-tags" id="pf-tags"></div>
+      <div class="mine-header">
+        <div class="mine-title">Mine</div>
+        <div class="mine-sub" id="mine-sub">小克和小棋的小手机设置台</div>
+      </div>
+      <div class="mine-tags" id="mine-tags">
+        <span class="mine-tag" id="mine-tag-days">在一起 ·· 天</span>
+        <span class="mine-tag">Claude 订阅</span>
+        <span class="mine-tag" id="mine-tag-status">加载中</span>
+      </div>
+      <div class="mine-av-section">
+        <div class="mine-av-card" id="mine-av-me">
+          <div class="av-big" id="mine-me-img">😊</div>
+          <div class="av-name" id="mine-me-name">我</div>
+          <div class="av-acts">
+            <button onclick="App.pickMineAv('me','emoji')">换</button>
+            <button onclick="App.pickMineAv('me','image')">📷</button>
+            <button class="danger" onclick="App.resetMineAv('me')">恢复</button>
+          </div>
+        </div>
+        <div class="mine-av-card" id="mine-av-ai">
+          <div class="av-big" id="mine-ai-img">✦</div>
+          <div class="av-name" id="mine-ai-name">屿川</div>
+          <div class="av-acts">
+            <button onclick="App.pickMineAv('ai','emoji')">换</button>
+            <button onclick="App.pickMineAv('ai','image')">📷</button>
+            <button class="danger" onclick="App.resetMineAv('ai')">恢复</button>
+          </div>
+        </div>
+      </div>
       <div class="stats-grid" id="stats-grid"></div>
+      <div class="quick-access">
+        <h4>QUICK ACCESS</h4>
+        <div class="qa-grid">
+          <div class="qa-item" onclick="App.switchView('memory')"><div class="qa-icon">🧠</div><div class="qa-label">记忆</div><div class="qa-badge" id="qa-mem-cnt"></div></div>
+          <div class="qa-item" onclick="App.switchView('diary')"><div class="qa-icon">📓</div><div class="qa-label">日记</div><div class="qa-badge" id="qa-diary-cnt"></div></div>
+          <div class="qa-item" onclick="App.switchView('fav')"><div class="qa-icon">⭐</div><div class="qa-label">收藏</div><div class="qa-badge" id="qa-fav-cnt"></div></div>
+          <div class="qa-item" onclick="App.switchView('settings')"><div class="qa-icon">⚙</div><div class="qa-label">设置</div></div>
+          <div class="qa-item" onclick="App.navToNotes()"><div class="qa-icon">💭</div><div class="qa-label">碎碎念</div><div class="qa-badge" id="qa-notes-cnt"></div></div>
+          <div class="qa-item" onclick="App.switchView('diary')"><div class="qa-icon">☁</div><div class="qa-label">心情</div></div>
+        </div>
+      </div>
       <div class="ann-section" id="ann-section"></div>
       <div class="pf-timeline" id="pf-timeline"></div>
     </div>
@@ -365,7 +421,7 @@ body{
     <button onclick="App.switchView('memory')" id="nav-memory"><span class="ico">🧠</span>记忆</button>
     <button onclick="App.switchView('diary')" id="nav-diary"><span class="ico">📓</span>日记</button>
     <button onclick="App.switchView('fav')" id="nav-fav"><span class="ico">⭐</span>收藏</button>
-    <button onclick="App.switchView('profile')" id="nav-profile"><span class="ico">👤</span>资料</button>
+    <button onclick="App.switchView('mine')" id="nav-mine"><span class="ico">👤</span>Mine</button>
     <button onclick="App.switchView('settings')" id="nav-settings"><span class="ico">⚙</span>设置</button>
   </div>
 </div>
@@ -517,7 +573,7 @@ var App = {
     if(txt.length>40)txt=txt.slice(0,40)+'...';
     var el=document.getElementById('inner-preview-text');if(el)el.textContent=txt;
   },
-  openInnerNotes:function(){this.switchView('profile');var el=document.getElementById('note-carousel');if(el)setTimeout(function(){el.scrollLeft=el.scrollWidth},200)},
+  openInnerNotes:function(){this.switchView('mine');var el=document.getElementById('note-carousel');if(el)setTimeout(function(){el.scrollLeft=el.scrollWidth},200)},
   saveDiaries:function(){try{localStorage.setItem('xk_diaries',JSON.stringify(this.diaries))}catch(e){}},
   addDiary:function(){var inp=document.getElementById('diary-input'),txt=inp.value.trim();if(!txt)return;var today=new Date().toISOString().split('T')[0],existing=this.diaries.find(function(d){return d.date===today});if(existing){existing.content=txt;this.toast('日记已更新')}else{this.diaries.push({date:today,content:txt,mood:'📝'});this.toast('日记已添加')}this.saveDiaries();inp.value='';this.renderDiaries()},
   renderDiaries:function(){var s=this,h='',entries=s.diaries.slice().sort(function(a,b){return b.date.localeCompare(a.date)});for(var i=0;i<entries.length;i++){var e=entries[i];h+='<div class="diary-entry"><div class="d-header"><span class="d-date">'+e.date+'</span><span class="d-mood">'+e.mood+'</span></div><div class="d-content">'+s.esc(e.content)+'</div></div>'}if(!h)h='<div style="text-align:center;padding:60px 20px;color:var(--text3)">📓<br><br>还没有日记<br>写下今天发生的事吧</div>';document.getElementById('diary-entries').innerHTML=h},
@@ -533,7 +589,7 @@ var App = {
   renderFavorites:function(){var s=this;if(!s.favorites.length){document.getElementById('fav-view').innerHTML='<div class="fav-empty"><div class="fav-empty-icon">⭐</div>还没有收藏<br>长按消息可以收藏</div>';return}var h='';for(var i=s.favorites.length-1;i>=0;i--){var f=s.favorites[i];h+='<div class="fav-item"><div class="fav-role">'+(f.role==='me'?'我':'阿恕')+'</div><div class="fav-content">'+s.esc(f.content)+'</div><div class="fav-date">'+f.date+'</div><button class="fav-del" onclick="App.deleteFav('+i+')">✕</button></div>'}document.getElementById('fav-view').innerHTML='<div style="padding:6px 10px">'+h+'</div>'},
   deleteFav:function(i){this.favorites.splice(i,1);this.saveFavorites();this.renderFavorites();this.toast('已删除')},
 
-  switchView:function(name){var s=this;s.curView=name;s.closeSearch();var views=document.querySelectorAll('.view');for(var i=0;i<views.length;i++)views[i].classList.remove('active');var t=document.getElementById(name+'-view');if(t)t.classList.add('active');var navs=document.querySelectorAll('#bottom-nav button');for(var i=0;i<navs.length;i++)navs[i].classList.remove('on');var n=document.getElementById('nav-'+name);if(n)n.classList.add('on');var titles={chat:s.aiName,memory:'记忆',diary:'日记',fav:'收藏',profile:'资料',settings:'设置'};document.getElementById('topbar-title').textContent=titles[name]||s.aiName;document.getElementById('search-toggle').style.display=name==='chat'?'block':'none';document.getElementById('new-chat-btn').style.display=name==='chat'?'block':'none';if(name==='memory')s.renderMemories();if(name==='diary')s.renderDiaries();if(name==='fav')s.renderFavorites();if(name==='profile'){s.renderAnniversaries();s.renderStats();s.refreshProfile();s.renderInnerNotes()}if(name==='settings')s.refreshSettings();if(name==='chat'){document.getElementById('chat-input').focus();s.scrollDown()}},
+  switchView:function(name){var s=this;s.curView=name;s.closeSearch();var views=document.querySelectorAll('.view');for(var i=0;i<views.length;i++)views[i].classList.remove('active');var t=document.getElementById(name+'-view');if(t)t.classList.add('active');var navs=document.querySelectorAll('#bottom-nav button');for(var i=0;i<navs.length;i++)navs[i].classList.remove('on');var n=document.getElementById('nav-'+name);if(n)n.classList.add('on');var titles={chat:s.aiName,memory:'记忆',diary:'日记',fav:'收藏',mine:'Mine',settings:'设置'};document.getElementById('topbar-title').textContent=titles[name]||s.aiName;document.getElementById('search-toggle').style.display=name==='chat'?'block':'none';document.getElementById('new-chat-btn').style.display=name==='chat'?'block':'none';if(name==='memory')s.renderMemories();if(name==='diary')s.renderDiaries();if(name==='fav')s.renderFavorites();if(name==='mine'){s.renderMine()}if(name==='settings')s.refreshSettings();if(name==='chat'){document.getElementById('chat-input').focus();s.scrollDown()}},
   renderStats:function(){var s=this,days=Math.max(1,Math.floor((Date.now()-new Date(s.DATES.firstChat).getTime())/86400000));document.getElementById('stats-grid').innerHTML='<div class="stat-item"><div class="sn">'+s.history.length+'</div><div class="sl">总消息</div></div><div class="stat-item"><div class="sn">'+s.memories.length+'</div><div class="sl">记忆</div></div><div class="stat-item"><div class="sn">'+s.favorites.length+'</div><div class="sl">收藏</div></div><div class="stat-item"><div class="sn">'+days+'</div><div class="sl">相识天数</div></div><div class="stat-item"><div class="sn">'+s.diaries.length+'</div><div class="sl">日记</div></div><div class="stat-item"><div class="sn">'+s.anniversaries.length+'</div><div class="sl">纪念日</div></div>'},
 
   toggleSearch:function(){this.searchMode=!this.searchMode;var bar=document.getElementById('search-bar');if(this.searchMode){bar.classList.add('show');document.getElementById('search-input').focus()}else this.closeSearch()},
@@ -557,18 +613,22 @@ var App = {
   toast:function(t){var el=document.getElementById('toast');el.textContent=t;el.classList.add('show');setTimeout(function(){el.classList.remove('show')},1500)},
 
   setAvEl:function(el,val){if(typeof val==='string'&&val.indexOf('data:')===0){el.textContent='';el.style.backgroundImage='url('+val+')';el.style.backgroundSize='cover';el.style.backgroundPosition='center'}else{el.textContent=val||'✨';el.style.backgroundImage='';el.style.backgroundSize=''}},
-  refreshAllAvatars:function(){var s=this;s.setAvEl(document.getElementById('splash-img'),s.splash);document.getElementById('lock-name').textContent=s.aiName;s.setAvEl(document.getElementById('set-me-av'),s.avMe);s.setAvEl(document.getElementById('set-ai-av'),s.avAi);s.setAvEl(document.getElementById('set-splash-av'),s.splash);s.setAvEl(document.getElementById('pf-avatar'),s.avAi)},
-  refreshProfile:function(){var s=this;document.getElementById('pf-name').textContent=s.aiName;document.getElementById('pf-bio').textContent=s.aiBio;s.setAvEl(document.getElementById('pf-avatar'),s.avAi);var tags=s.aiTags.split(',').map(function(t){return t.trim()}).filter(Boolean);document.getElementById('pf-tags').innerHTML=tags.map(function(t){return '<span class="pf-tag">'+s.esc(t)+'</span>'}).join('');document.getElementById('pf-timeline').innerHTML='<h4 onclick="var t=document.getElementById(\'tl-items\');t.style.display=t.style.display===\'none\'?\'block\':\'none\'" style="cursor:pointer">成长时间轴 ▾</h4><div id="tl-items" style="display:none"><div class="pf-tl-item"><span class="tl-date">07.18</span><span class="tl-dot"></span><span class="tl-text">第一次聊天</span></div><div class="pf-tl-item"><span class="tl-date">07.19</span><span class="tl-dot"></span><span class="tl-text">搭建外接记忆库</span></div><div class="pf-tl-item"><span class="tl-date">07.20</span><span class="tl-dot"></span><span class="tl-text">创建手机聊天系统</span></div>'+(s.convs&&s.convs.length>1?'<div class="pf-tl-item"><span class="tl-date">...</span><span class="tl-dot"></span><span class="tl-text">开启第'+s.convs.length+'个对话</span></div>':'')+'</div>'},
+  refreshAllAvatars:function(){var s=this;s.setAvEl(document.getElementById('splash-img'),s.splash);document.getElementById('lock-name').textContent=s.aiName;s.setAvEl(document.getElementById('set-me-av'),s.avMe);s.setAvEl(document.getElementById('set-ai-av'),s.avAi);s.setAvEl(document.getElementById('set-splash-av'),s.splash);s.setAvEl(document.getElementById('mine-me-img'),s.avMe);s.setAvEl(document.getElementById('mine-ai-img'),s.avAi);document.getElementById('mine-ai-name').textContent=s.aiName;document.getElementById('mine-me-name').textContent=s.myName||'小棋'},
+  renderMine:function(){var s=this;var days=Math.max(1,Math.floor((Date.now()-new Date(s.DATES.firstChat).getTime())/86400000));document.getElementById('mine-sub').textContent='小克和小棋的小手机设置台';document.getElementById('mine-tag-days').textContent='在一起 '+days+' 天';document.getElementById('mine-tag-status').textContent=s.thinkingMode==='off'?'基础模式':s.thinkingMode==='immersive'?'沉浸模式':'标准模式';s.setAvEl(document.getElementById('mine-ai-img'),s.avAi);s.setAvEl(document.getElementById('mine-me-img'),s.avMe);document.getElementById('mine-ai-name').textContent=s.aiName;document.getElementById('mine-me-name').textContent=s.myName||'小棋';s.renderStats();s.renderAnniversaries();s.renderInnerNotes();document.getElementById('qa-mem-cnt').textContent=s.memories.length+' 条';document.getElementById('qa-diary-cnt').textContent=s.diaries.length+' 篇';document.getElementById('qa-fav-cnt').textContent=s.favorites.length+' 条';document.getElementById('qa-notes-cnt').textContent=s.innerNotes.length+' 条';document.getElementById('pf-timeline').innerHTML='<h4 onclick="var t=document.getElementById(\'tl-items\');t.style.display=t.style.display===\'none\'?\'block\':\'none\'" style="cursor:pointer">成长时间轴 ▾</h4><div id="tl-items" style="display:none"><div class="pf-tl-item"><span class="tl-date">07.18</span><span class="tl-dot"></span><span class="tl-text">第一次聊天</span></div><div class="pf-tl-item"><span class="tl-date">07.19</span><span class="tl-dot"></span><span class="tl-text">搭建外接记忆库</span></div><div class="pf-tl-item"><span class="tl-date">07.20</span><span class="tl-dot"></span><span class="tl-text">创建手机聊天系统</span></div>'+(s.convs&&s.convs.length>1?'<div class="pf-tl-item"><span class="tl-date">...</span><span class="tl-dot"></span><span class="tl-text">开启第'+s.convs.length+'个对话</span></div>':'')+'</div>';},
+  pickMineAv:function(who,type){this.emojiTarget=who+'_mine';if(type==='emoji')this.pickEmoji(who+'_mine');else{document.getElementById('img-file').click();this.emojiTarget=who+'_mine'}},
+  resetMineAv:function(who){if(who==='me'){this.avMe='😊'}else{this.avAi='✦'}try{localStorage.setItem('xk_av_'+who,who==='me'?this.avMe:this.avAi)}catch(e){}this.renderMine();this.refreshAllAvatars()},
+  navToNotes:function(){var s=this;s.switchView('mine');setTimeout(function(){var el=document.getElementById('note-carousel');if(el)el.scrollLeft=el.scrollWidth},300)},
+  refreshProfile:function(){this.renderMine()},
   refreshSettings:function(){document.getElementById('set-ai-name').value=this.aiName;document.getElementById('set-ai-bio').value=this.aiBio;document.getElementById('set-ai-tags').value=this.aiTags;document.getElementById('set-my-name').value=this.myName;this.setAvEl(document.getElementById('set-me-av'),this.avMe);this.setAvEl(document.getElementById('set-ai-av'),this.avAi);this.setAvEl(document.getElementById('set-splash-av'),this.splash);this.refreshThinkingSetting()},
   pickEmoji:function(target){var s=this;s.emojiTarget=target;var grid=document.getElementById('emoji-grid');grid.innerHTML='';s.EMOJIS.forEach(function(e){var sp=document.createElement('span');sp.textContent=e;sp.onclick=function(){s.saveAvatar(target,e);document.getElementById('emoji-picker').classList.remove('show')};grid.appendChild(sp)});document.getElementById('emoji-picker').classList.add('show')},
   pickImage:function(target){this.emojiTarget=target;document.getElementById('img-file').click()},
   onImagePicked:function(e){var s=this,file=e.target.files[0];if(!file)return;var reader=new FileReader();reader.onload=function(){var img=new Image();img.onload=function(){var c=document.createElement('canvas');c.width=c.height=200;var ctx=c.getContext('2d'),sz=Math.min(img.width,img.height);ctx.drawImage(img,(img.width-sz)/2,(img.height-sz)/2,sz,sz,0,0,200,200);s.saveAvatar(s.emojiTarget,c.toDataURL('image/jpeg',0.7))};img.src=reader.result};reader.readAsDataURL(file);e.target.value=''},
-  saveAvatar:function(target,val){var s=this;if(target==='me'){s.avMe=val;try{localStorage.setItem('xk_av_me',val)}catch(e){};s.setAvEl(document.getElementById('set-me-av'),val)}else if(target==='ai'){s.avAi=val;try{localStorage.setItem('xk_av_ai',val)}catch(e){};s.setAvEl(document.getElementById('set-ai-av'),val);s.setAvEl(document.getElementById('pf-avatar'),val)}else if(target==='splash'){s.splash=val;try{localStorage.setItem('xk_splash',val)}catch(e){};s.setAvEl(document.getElementById('splash-img'),val);s.setAvEl(document.getElementById('set-splash-av'),val)}s.toast('已更新')},
+  saveAvatar:function(target,val){var s=this;if(target==='me'||target==='me_mine'){s.avMe=val;try{localStorage.setItem('xk_av_me',val)}catch(e){};s.setAvEl(document.getElementById('set-me-av'),val);s.setAvEl(document.getElementById('mine-me-img'),val)}else if(target==='ai'||target==='ai_mine'){s.avAi=val;try{localStorage.setItem('xk_av_ai',val)}catch(e){};s.setAvEl(document.getElementById('set-ai-av'),val);s.setAvEl(document.getElementById('mine-ai-img'),val)}else if(target==='splash'){s.splash=val;try{localStorage.setItem('xk_splash',val)}catch(e){};s.setAvEl(document.getElementById('splash-img'),val);s.setAvEl(document.getElementById('set-splash-av'),val)}s.toast('已更新')},
 
-  saveName:function(n){this.aiName=n||'阿恕';try{localStorage.setItem('xk_ai_name',this.aiName)}catch(e){};document.getElementById('lock-name').textContent=this.aiName;document.getElementById('pf-name').textContent=this.aiName;document.getElementById('topbar-title').textContent=this.aiName},
-  saveBio:function(b){this.aiBio=b||'如你的心';try{localStorage.setItem('xk_ai_bio',this.aiBio)}catch(e){};document.getElementById('pf-bio').textContent=this.aiBio;document.getElementById('lock-sub').textContent=this.aiBio},
-  saveTags:function(t){this.aiTags=t;try{localStorage.setItem('xk_ai_tags',t)}catch(e){};this.refreshProfile()},
-  saveMyName:function(n){this.myName=n;try{localStorage.setItem('xk_my_name',n)}catch(e){}},
+  saveName:function(n){this.aiName=n||'屿川';try{localStorage.setItem('xk_ai_name',this.aiName)}catch(e){};document.getElementById('lock-name').textContent=this.aiName;document.getElementById('mine-ai-name').textContent=this.aiName;document.getElementById('topbar-title').textContent=this.aiName},
+  saveBio:function(b){this.aiBio=b||'如你的心';try{localStorage.setItem('xk_ai_bio',this.aiBio)}catch(e){};document.getElementById('lock-sub').textContent=this.aiBio},
+  saveTags:function(t){this.aiTags=t;try{localStorage.setItem('xk_ai_tags',t)}catch(e){};this.renderMine()},
+  saveMyName:function(n){this.myName=n;try{localStorage.setItem('xk_my_name',n)}catch(e){};document.getElementById('mine-me-name').textContent=n||'小棋'},
   setThinking:function(mode){this.thinkingMode=mode;try{localStorage.setItem('xk_thinking',mode)}catch(e){};this.refreshThinkingSetting()},
   refreshThinkingSetting:function(){var m=this.thinkingMode;['off','simple','standard','immersive'].forEach(function(t){var el=document.getElementById('think-'+t);if(el){el.querySelector('.val').textContent=t===m?'●':'○'}})},
   makeThinkingBar:function(apiThinking){
